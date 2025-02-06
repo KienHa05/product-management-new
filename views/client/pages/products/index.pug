@@ -1,4 +1,20 @@
 extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
 
 block main
-    h1 Trang Danh Sách Sản Phẩm
+    .container.my-3
+      .row
+        .col-12
+          .box-head
+            +box-head("Danh Sách Sản Phẩm")
+
+      .row
+        .col-4.mb-3
+          .product-item
+            .inner-image
+              img(src="https://i5.walmartimages.com/asr/199ab764-f112-4508-888c-86a1094624e8.17daf90b726900a539a8b9873fdea1f5.jpeg", alt="iPhone 9")
+            .inner-content
+              h3.inner-title iPhone 9
+              .inner-price-new 80$
+              .inner-price-old 100$
+              .inner-discount -20%
