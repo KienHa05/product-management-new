@@ -1,0 +1,50 @@
+extends ../../layouts/default.pug
+
+block main
+  h1 Danh Sách Sản Phẩm
+
+
+  table.table.table-hover.table-sm
+    thead
+      tr
+        th STT
+        th Hình Ảnh
+        th Tiêu Đề
+        th Giá
+        th Trạng Thái
+        th Thao Tác
+
+    tbody
+      tr
+        td 1
+        td
+          img( 
+            src="https://salt.tikicdn.com/cache/750x750/ts/product/af/7e/d4/ee2cee7a7b2420b7d49bbb644838a9f4.png.webp"
+            alt="Sản phẩm 1"
+            width="100px"
+            height="auto"
+          )
+        td Sản phẩm 1
+        td 100$
+        td
+          a(href="#" class="badge badge-success") Hoạt động
+        td
+          button(class="btn btn-warning btn-sm") Sửa   
+          button(class="btn btn-danger btn-sm ml-1") Xóa
+
+      tr
+        td 2
+        td
+          img(
+            src="https://salt.tikicdn.com/cache/750x750/ts/product/f0/1c/fb/575dec7e913e676e43cf559c9b56f925.png.webp"
+            alt="Sản phẩm 1"
+            width="100px"
+            height="auto"
+          )
+        td Sản phẩm 2
+        td 150$
+        td
+          a(href="#" class="badge badge-danger") Dừng Hoạt động
+        td
+          button(class="btn btn-warning btn-sm") Sửa   
+          button(class="btn btn-danger btn-sm ml-1") Xóa
