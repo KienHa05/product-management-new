@@ -21,6 +21,7 @@ block main
                 placeholder="Nhập từ khóa tìm kiếm..."
                 name="keyword"
                 class="form-control"
+                value=keyword
               )
               .input-group-append
                 button(
@@ -56,9 +57,9 @@ block main
                 td #{item.price}$
                 td
                   if item.status == "active"
-                    a(href="#" class="badge badge-success") Hoạt động
+                    a(href="#" class="badge badge-success") Hoạt Động
                   else
-                    a(href="#" class="badge badge-danger") Dừng Hoạt động
+                    a(href="#" class="badge badge-danger") Dừng Hoạt Động
                 td
                   button(class="btn btn-warning btn-sm") Sửa   
                   button(class="btn btn-danger btn-sm ml-1") Xóa
