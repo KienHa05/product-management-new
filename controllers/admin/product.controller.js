@@ -95,6 +95,7 @@ module.exports.changeMulti = async (req, res) => {
                     position: position
                 });
             }
+            req.flash("success",`Cập Nhật Vị Trí Thành Công ${ids.length} Sản Phẩm!`);
             break;
         default:
             break;
@@ -115,6 +116,6 @@ module.exports.deleteItem = async (req, res) => {
     });
 
     req.flash("success", `Đã Xóa Thành Công Sản Phẩm Này!`);
-    
+
     res.redirect("back");
 }
