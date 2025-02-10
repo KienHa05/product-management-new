@@ -84,6 +84,7 @@ module.exports.changeMulti = async (req, res) => {
                     deletedAt: new Date(),
                 }
             );
+            req.flash("success",`Đã Xóa Thành Công ${ids.length} Sản Phẩm!`);
             break;
         case "change-position":
             for (const item of ids) {
@@ -113,5 +114,7 @@ module.exports.deleteItem = async (req, res) => {
         deletedAt: new Date()
     });
 
+    req.flash("success", `Đã Xóa Thành Công Sản Phẩm Này!`);
+    
     res.redirect("back");
 }
