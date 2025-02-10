@@ -1,5 +1,7 @@
 const Product = require("../../models/product.model");
 
+const systemConfig = require("../../config/system");
+
 const filterStatusHelper = require('../../helpers/filterStatus');
 const searchHelper = require('../../helpers/search');
 const paginationHelper = require('../../helpers/pagination');
@@ -57,7 +59,7 @@ module.exports.changeStatus = async (req, res) => {
 
     await Product.updateOne({ _id: id }, { status: status });
 
-    req.flash("success","Cập Nhật Trạng Thái Thành Công !");
+    req.flash("success", "Cập Nhật Trạng Thái Thành Công !");
 
     res.redirect("back");
 }
@@ -70,11 +72,11 @@ module.exports.changeMulti = async (req, res) => {
     switch (type) {
         case "active":
             await Product.updateMany({ _id: { $in: ids } }, { status: "active" });
-            req.flash("success",`Cập Nhật Trạng Thái Thành Công ${ids.length} Sản Phẩm!`);
+            req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Sản Phẩm!`);
             break;
         case "inactive":
             await Product.updateMany({ _id: { $in: ids } }, { status: "inactive" });
-            req.flash("success",`Cập Nhật Trạng Thái Thành Công ${ids.length} Sản Phẩm!`);
+            req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Sản Phẩm!`);
             break;
         case "delete-all":
             await Product.updateMany(
@@ -84,7 +86,7 @@ module.exports.changeMulti = async (req, res) => {
                     deletedAt: new Date(),
                 }
             );
-            req.flash("success",`Đã Xóa Thành Công ${ids.length} Sản Phẩm!`);
+            req.flash("success", `Đã Xóa Thành Công ${ids.length} Sản Phẩm!`);
             break;
         case "change-position":
             for (const item of ids) {
@@ -95,7 +97,7 @@ module.exports.changeMulti = async (req, res) => {
                     position: position
                 });
             }
-            req.flash("success",`Cập Nhật Vị Trí Thành Công ${ids.length} Sản Phẩm!`);
+            req.flash("success", `Cập Nhật Vị Trí Thành Công ${ids.length} Sản Phẩm!`);
             break;
         default:
             break;
@@ -118,4 +120,31 @@ module.exports.deleteItem = async (req, res) => {
     req.flash("success", `Đã Xóa Thành Công Sản Phẩm Này!`);
 
     res.redirect("back");
+}
+
+// [GET] /admin/products/create
+module.exports.create = async (req, res) => {
+
+    res.render("admin/pages/products/create", {
+        pageTitle: "Thêm Mới Sản Phẩm",
+    });
+}
+
+// [POST] /admin/products/create
+module.exports.createPost = async (req, res) => {
+    req.body.price = parseInt(req.body.price);
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+
+    if (req.body.position == "") {
+        const countProducts = await Product.count();
+        req.body.position = countProducts + 1;
+    } else {
+        req.body.position = parseInt(req.body.position);
+    }
+
+    const product = new Product(req.body);
+    await product.save();
+
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
 }
