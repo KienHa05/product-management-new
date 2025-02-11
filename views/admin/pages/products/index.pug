@@ -93,7 +93,11 @@ block main
                     ) Dừng Hoạt Động
                 td
                   a(
-                    href=`/admin/products/edit/${item.id}`
+                    href=`${prefixAdmin}/products/detail/${item.id}`
+                    class="btn btn-info btn-sm"
+                  ) Chi Tiết
+                  a(
+                    href=`${prefixAdmin}/products/edit/${item.id}`
                     class="btn btn-warning btn-sm"
                   ) Sửa
                   button(
