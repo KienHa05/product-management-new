@@ -1,44 +1,19 @@
 extends ../../layouts/default.pug
-include ../../mixins/filter-status.pug
-include ../../mixins/search.pug
-include ../../mixins/pagination.pug
-include ../../mixins/form-change-multi.pug
-include ../../mixins/alert.pug
-include ../../mixins/sort.pug
 
 block main
-  +alert-success(5000)
-
-  h1 Danh Sách Sản Phẩm
-
-  .card.mb-3
-    .card-header Bộ Lọc và Tìm Kiếm
-    .card-body
-      .row
-        .col-6
-          +filter-status(filterStatus)
-        .col-6
-          +search(keyword)
-
-  .card.mb-3
-    .card-header Sắp Xếp
-    .card-body
-      .row
-        .col-4
-          +sort()
-            
+  h1 Danh Mục Sản Phẩm
+        
   .card.mb-3
     .card-header Danh Sách Sản Phẩm
       .card-body
         .row
           .col-8
-            +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
           .col-4
             a(
-              href=`${prefixAdmin}/products/create`
+              href=`${prefixAdmin}/products-category/create`
               class="btn btn-outline-success"
             ) + Thêm Mới
-        
+
         table(
           class="table table-hover table-sm"
           checkbox-multi
@@ -50,13 +25,12 @@ block main
               th STT
               th Hình Ảnh
               th Tiêu Đề
-              th Giá
               th Vị Trí
               th Trạng Thái
               th Thao Tác
 
           tbody
-            each item, index in products
+            each item, index in records
               tr
                 td
                   input(
@@ -73,7 +47,6 @@ block main
                     height="auto"
                   )
                 td #{item.title}
-                td #{item.price}$
                 td 
                   input(
                     type="number"
@@ -101,34 +74,18 @@ block main
                     ) Dừng Hoạt Động
                 td
                   a(
-                    href=`${prefixAdmin}/products/detail/${item.id}`
+                    href=`${prefixAdmin}/products-category/detail/${item.id}`
                     class="btn btn-info btn-sm"
                   ) Chi Tiết
                   a(
-                    href=`${prefixAdmin}/products/edit/${item.id}`
+                    href=`${prefixAdmin}/products-category/edit/${item.id}`
                     class="btn btn-warning btn-sm"
                   ) Sửa
                   button(
                     class="btn btn-danger btn-sm ml-1"
                     button-delete
                     data-id=item.id
-                  ) Xóa
-                  
-  +pagination(pagination)
+                  ) Xóa    
 
-  form(
-    action=""
-    method="POST"
-    id="form-change-status"
-    data-path=`${prefixAdmin}/products/change-status`
-  )
-
-  form(
-    action=""
-    method="POST"
-    id="form-delete-item"
-    data-path=`${prefixAdmin}/products/delete`
-  )
-
-  script(src="/admin/js/product.js") 
-      
+     
+        
