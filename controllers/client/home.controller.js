@@ -11,11 +11,21 @@ module.exports.index = async (req, res) => {
         status: "active",
     }).limit(6);
 
-    const newProducts = productsHelper.priceNewProducts(productsFeatured);
-    // End Ra Sản Phẩm Nổi Bật
+    const newProductsFeatured = productsHelper.priceNewProducts(productsFeatured);
+    // End Lấy Ra Sản Phẩm Nổi Bật
+
+    // Hiển Thị Danh Sách Sản Phẩm Mới Nhất
+    const productsNew = await Product.find({
+        deleted: false,
+        status: "active",
+    }).sort({ position: "desc" }).limit(6);
+
+    const newProductsNew = productsHelper.priceNewProducts(productsNew);
+    // End Hiển Thị Danh Sách Sản Phẩm Mới Nhất
 
     res.render("client/pages/home/index", {
         pageTitle: "Trang Chủ",
-        productsFeatured: newProducts,
+        productsFeatured: newProductsFeatured,
+        productsNew: newProductsNew,
     });
 }
