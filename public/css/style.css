@@ -341,3 +341,15 @@
 }
 
 /* End chat */
+
+/* Emoji Icon */
+.tooltip {
+    visibility: hidden;
+}
+
+.tooltip.shown {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* End Emoji Icon */
