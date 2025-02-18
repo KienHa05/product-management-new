@@ -3,6 +3,53 @@ extends ../../layouts/default.pug
 block main
   h1 Trang Tổng Quan
 
-  div #{user}
-  div ----------------------------------------------------------------
-  div #{role}
+  .row.mt-4
+    .col-12
+      .card.mb-4
+        .card-header Thông Tin Tài Khoản
+        .card-body
+          if user.avatar
+            img(
+              src=user.avatar
+              style="height:100px;margin-bottom:15px;"
+            )
+          if user.fullName
+            p Họ tên : <b>#{user.fullName}</b>
+          if user.email
+            p Email : <b>#{user.email}</b>
+          if user.phone
+            p Số điện thoại : <b>#{user.phone}</b>
+          if role.title
+            p Phân Quyền : <b>#{role.title}</b>
+
+    .col-6
+      .card.mb-4
+        .card-header Danh Mục Sản Phẩm
+        .card-body
+          p Số Lượng: <b>#{statistic.categoryProduct.total}</b>        
+          p Hoạt Động: <b>#{statistic.categoryProduct.active}</b>        
+          p Dừng Hoạt Động: <b>#{statistic.categoryProduct.inactive}</b>
+
+    .col-6
+      .card.mb-4
+        .card-header Sản Phẩm
+        .card-body
+          p Số Lượng: <b>#{statistic.product.total}</b>        
+          p Hoạt Động: <b>#{statistic.product.active}</b>        
+          p Dừng Hoạt Động: <b>#{statistic.product.inactive}</b>
+
+    .col-6
+      .card.mb-4
+        .card-header Tài Khoản Admin
+        .card-body
+          p Số Lượng: <b>#{statistic.account.total}</b>        
+          p Hoạt Động: <b>#{statistic.account.active}</b>        
+          p Dừng Hoạt Động: <b>#{statistic.account.inactive}</b>
+
+    .col-6
+      .card.mb-4
+        .card-header Tài Khoản Client
+        .card-body
+          p Số Lượng: <b>#{statistic.user.total}</b>  
+          p Hoạt Động: <b>#{statistic.user.active}</b>        
+          p Dừng Hoạt Động: <b>#{statistic.user.inactive}</b>              
