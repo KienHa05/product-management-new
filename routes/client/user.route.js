@@ -18,4 +18,16 @@ router.get('/password/forgot', controller.forgotPassword);
 
 router.post('/password/forgot', validate.forgotPasswordPost, controller.forgotPasswordPost);
 
+router.get('/password/otp', controller.otpPassword);
+
+router.post('/password/otp', controller.otpPasswordPost);
+
+router.get('/password/reset', controller.resetPassword);
+
+router.post(
+    '/password/reset',
+    validate.resetPasswordPost,
+    controller.resetPasswordPost
+);
+
 module.exports = router;

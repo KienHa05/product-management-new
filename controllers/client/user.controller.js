@@ -3,6 +3,7 @@ const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.route");
 
 const generateHelper = require("../../helpers/generate");
+const sendMailHelper = require("../../helpers/sendMail");
 
 // [GET] /user/register
 module.exports.register = async (req, res) => {
@@ -116,6 +117,66 @@ module.exports.forgotPasswordPost = async (req, res) => {
     await forgotPassword.save();
 
     // Nếu tồn tại email thì gửi mã OTP qua email
+    const subject = "Mã OTP Xác Minh Lấy Lại Mật Khẩu";
+    const html = `
+      Mã OTP Để Lấy Lại Mật Khẩu Là <b>${otp}</b>. Thời Hạn Sử Dụng Của Bạn Là 3 Phút! 
+    `;
+    sendMailHelper.sendMail(email, subject, html);
 
-    res.send("OK");
+    res.redirect(`/user/password/otp?email=${email}`);
+};
+
+// [GET] /user/password/otp
+module.exports.otpPassword = async (req, res) => {
+    const email = req.query.email;
+
+    res.render("client/pages/user/otp-password", {
+        pageTitle: "Nhập Mã OTP",
+        email: email
+    });
+};
+
+// [POST] /user/password/otp
+module.exports.otpPasswordPost = async (req, res) => {
+    const email = req.body.email;
+    const otp = req.body.otp;
+
+    const result = await ForgotPassword.findOne({
+        email: email,
+        otp: otp,
+    });
+
+    if (!result) {
+        req.flash("error", "Mã OTP Không Chính Xác!");
+        res.redirect("back");
+        return;
+    }
+
+    const user = await User.findOne({
+        email: email,
+    });
+
+    res.cookie("tokenUser", user.tokenUser);
+
+    res.redirect("/user/password/reset");
+};
+
+// [GET] /user/password/reset
+module.exports.resetPassword = async (req, res) => {
+    res.render("client/pages/user/reset-password", {
+        pageTitle: "Đổi Mật Khẩu"
+    });
+};
+
+// [POST] /user/password/reset
+module.exports.resetPasswordPost = async (req, res) => {
+    const password = req.body.password;
+    const tokenUser = req.cookies.tokenUser;
+
+    await User.updateOne(
+        { tokenUser: tokenUser },
+        { password: md5(password) }
+    );
+
+    res.redirect("/");
 };
