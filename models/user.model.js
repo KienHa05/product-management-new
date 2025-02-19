@@ -4,18 +4,26 @@ const generate = require("../helpers/generate");
 const userSchema = new mongoose.Schema(
     {
         fullName: String,
-        email:String,
+        email: String,
         password: String,
-        tokenUser:{
+        tokenUser: {
             type: String,
             default: generate.generateRandomString(20),
         },
-        phone:String,
-        avatar:String,
+        phone: String,
+        avatar: String,
         status: {
             type: String,
             default: "active",
         },
+        requestFriends: Array, // Lời Mời Đã Gửi
+        acceptFriends: Array, // Lời Mời Đã Nhận
+        friendList: [ // Danh Sách Bạn Bè
+            {
+                user_id: String,
+                room_chat_id: String,
+            }
+        ],
         deleted: {
             type: Boolean,
             default: false,
