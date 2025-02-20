@@ -175,3 +175,16 @@ socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
     }
 });
 // End SERVER_RETURN_USER_ID_CANCEL_FRIEND
+
+// SERVER_RETURN_USER_STATUS_ONLINE
+socket.on("SERVER_RETURN_USER_STATUS_ONLINE", (data) => {
+    const dataUsersFriend = document.querySelector("[data-users-friend]");
+    if (dataUsersFriend) {
+        const boxUser = dataUsersFriend.querySelector(`[user-id="${data.userId}"]`);
+        if (boxUser) {
+            const boxStatus = boxUser.querySelector("[status]");
+            boxStatus.setAttribute("status", data.status);
+        }
+    }
+});
+// End SERVER_RETURN_USER_STATUS_ONLINE
