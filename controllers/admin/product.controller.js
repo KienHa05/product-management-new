@@ -36,7 +36,7 @@ module.exports.index = async (req, res) => {
     };
 
     const countProducts = await Product.count(find);
-    
+
     let objectPagination = paginationHelper(
         initPagination,
         req.query,
@@ -61,24 +61,31 @@ module.exports.index = async (req, res) => {
 
     for (const product of products) {
         // Lấy Ra Thông Tin Người Tạo
-        const user = await Account.findOne({
-            _id: product.createdBy.account_id,
-        });
-
-        if (user) {
-            product.accountFullName = user.fullName;
-        }
-
-        // Lấy Ra Thông Tin Người Cập Nhật Gần Nhất
-        const updatedBy = product.updatedBy.slice(-1)[0];
-        if (updatedBy) {
-            const userUpdated = await Account.findOne({
-                _id: updatedBy.account_id,
+        if (product.createdBy && product.createdBy.account_id) {
+            const userCreated = await Account.findOne({
+                _id: product.createdBy.account_id,
             });
 
-            updatedBy.accountFullName = userUpdated.fullName;
+            if (userCreated) {
+                product.createdBy.accountFullName = userCreated.fullName;
+            } else {
+                product.createdBy.accountFullName = "Không rõ ai"; // Tránh lỗi undefined
+            }
         }
 
+        // Lấy Ra Thông Tin Người Cập Nhật Gần Nhất Trên Giao Diện - Lưu Full Tất Cả Trong DB
+        const userUpdatedId = product.updatedBy.slice(-1)[0];
+        if (userUpdatedId) {
+            const userUpdated = await Account.findOne({
+                _id: userUpdatedId.account_id,
+            });
+
+            if (userUpdated) {
+                userUpdatedId.accountFullName = userUpdated.fullName;
+            } else {
+                userUpdatedId.accountFullName = "Không rõ ai";
+            }
+        }
     }
 
     res.render("admin/pages/products/index", {

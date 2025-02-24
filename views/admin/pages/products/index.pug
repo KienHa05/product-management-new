@@ -107,9 +107,12 @@ block main
                           class="badge badge-danger"
                         ) Dừng Hoạt Động
                   td
-                    p #{item.accountFullName} 
+                    if item.createdBy.accountFullName
+                      p #{item.createdBy.accountFullName} 
+                    else 
+                      p Không Rõ Ai
                     p
-                      +formatDate(item.createdBy.createdAt)
+                      +formatDateTime(item.createdBy.createdAt)
                   td
                     - const updatedBy = item.updatedBy.slice(-1)[0];
                     if updatedBy
