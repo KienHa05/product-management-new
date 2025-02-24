@@ -30,17 +30,20 @@ module.exports.index = async (req, res) => {
     }
 
     // Pagination
-    const countProducts = await Product.count(find);
+    let initPagination = {
+        currentPage: 1,
+        limitItems: 4
+    };
 
+    const countProducts = await Product.count(find);
+    
     let objectPagination = paginationHelper(
-        {
-            currentPage: 1,
-            limitItems: 4
-        },
+        initPagination,
         req.query,
         countProducts
     );
     // End Pagination
+
     // Sort
     let sort = {};
 

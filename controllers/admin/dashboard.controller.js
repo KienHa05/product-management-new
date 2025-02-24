@@ -1,4 +1,8 @@
 const ProductCategory = require("../../models/product-category.model");
+const Product = require("../../models/product.model");
+const Account = require("../../models/account.model");
+const User = require("../../models/user.model");
+
 
 // [GET] /admin/dashboard
 module.exports.dashboard = async (req, res) => {
