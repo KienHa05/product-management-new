@@ -14,6 +14,7 @@ const createTreeHelper = require("../../helpers/createTree");
 module.exports.index = async (req, res) => {
 
     const filterStatus = filterStatusHelper(req.query);
+    let objectSearch = searchHelper(req.query);
 
     let find = {
         deleted: false
@@ -23,9 +24,7 @@ module.exports.index = async (req, res) => {
         find.status = req.query.status;
     }
 
-    const objectSearch = searchHelper(req.query);
-
-    if (objectSearch.regex) {
+    if (req.query.keyword) {
         find.title = objectSearch.regex;
     }
 
