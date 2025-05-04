@@ -44,8 +44,8 @@ app.use(flash());
 
 // TinyMCE
 app.use(
-    '/tinymce',
-    express.static(path.join(__dirname, 'node_modules', 'tinymce'))
+  '/tinymce',
+  express.static(path.join(__dirname, 'node_modules', 'tinymce'))
 );
 // End TinyMCE
 
@@ -59,11 +59,11 @@ app.use(express.static(`${__dirname}/public`));
 routeAdmin(app);
 route(app);
 app.get("*", (req, res) => {
-    res.render("client/pages/errors/404", {
-        pageTitle: "404 Not Found",
-    });
+  res.render("client/pages/errors/404", {
+    pageTitle: "404 Not Found",
+  });
 });
 
 server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });

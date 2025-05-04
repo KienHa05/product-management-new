@@ -4,92 +4,92 @@ const systemConfig = require("../../config/system");
 
 // [GET] /admin/roles
 module.exports.index = async (req, res) => {
-    let find = {
-        deleted: false
-    };
+  let find = {
+    deleted: false
+  };
 
-    const records = await Role.find(find);
-    res.render("admin/pages/roles/index", {
-        pageTitle: "Nhóm Quyền",
-        records: records,
-    });
+  const records = await Role.find(find);
+  res.render("admin/pages/roles/index", {
+    pageTitle: "Nhóm Quyền",
+    records: records,
+  });
 }
 
 // [GET] /admin/roles/create
 module.exports.create = async (req, res) => {
 
-    res.render("admin/pages/roles/create", {
-        pageTitle: "Tạo Nhóm Quyền",
-    });
+  res.render("admin/pages/roles/create", {
+    pageTitle: "Tạo Nhóm Quyền",
+  });
 }
 
 // [POST] /admin/roles/create
 module.exports.createPost = async (req, res) => {
 
-    const record = await Role(req.body);
-    await record.save();
+  const record = await Role(req.body);
+  await record.save();
 
-    res.redirect(`${systemConfig.prefixAdmin}/roles`);
+  res.redirect(`${systemConfig.prefixAdmin}/roles`);
 }
 
 // [GET] /admin/roles/edit/:id
 module.exports.edit = async (req, res) => {
-    try {
-        const id = req.params.id;
-        let find = {
-            _id: id,
-            deleted: false
-        };
+  try {
+    const id = req.params.id;
+    let find = {
+      _id: id,
+      deleted: false
+    };
 
-        const data = await Role.findOne(find);
+    const data = await Role.findOne(find);
 
-        res.render("admin/pages/roles/edit", {
-            pageTitle: "Cập Nhật Nhóm Quyền",
-            data: data
-        });
-    } catch (error) {
-        res.redirect(`${systemConfig.prefixAdmin}/roles`);
-    }
+    res.render("admin/pages/roles/edit", {
+      pageTitle: "Cập Nhật Nhóm Quyền",
+      data: data
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/roles`);
+  }
 };
 
 // [PATCH] /admin/roles/edit/:id
 module.exports.editPatch = async (req, res) => {
-    try {
-        const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-        await Role.updateOne({ _id: id }, req.body);
+    await Role.updateOne({ _id: id }, req.body);
 
-        req.flash("success", "Cập Nhật Nhóm Quyền Thành Công!");
-    } catch (error) {
-        req.flash("error", "Cập Nhật Nhóm Quyền Thất Bại!");
-    }
+    req.flash("success", "Cập Nhật Nhóm Quyền Thành Công!");
+  } catch (error) {
+    req.flash("error", "Cập Nhật Nhóm Quyền Thất Bại!");
+  }
 
-    res.redirect(`back`);
+  res.redirect(`back`);
 };
 
 // [GET] /admin/roles/permissions
 module.exports.permissions = async (req, res) => {
-    let find = {
-        deleted: false
-    };
+  let find = {
+    deleted: false
+  };
 
-    const records = await Role.find(find);
+  const records = await Role.find(find);
 
-    res.render("admin/pages/roles/permissions", {
-        pageTitle: "Phân Quyền",
-        records: records,
-    });
+  res.render("admin/pages/roles/permissions", {
+    pageTitle: "Phân Quyền",
+    records: records,
+  });
 };
 
 // [PATCH] /admin/roles/permissions
 module.exports.permissionsPatch = async (req, res) => {
-    const permissions = JSON.parse(req.body.permissions);
+  const permissions = JSON.parse(req.body.permissions);
 
 
-    for (const item of permissions) {
-        await Role.updateOne({ _id: item.id }, { permissions: item.permissions });
-    }
+  for (const item of permissions) {
+    await Role.updateOne({ _id: item.id }, { permissions: item.permissions });
+  }
 
-    req.flash("success", "Cập Nhật Phân Quyền Thành Công!");
-    res.redirect("back");
+  req.flash("success", "Cập Nhật Phân Quyền Thành Công!");
+  res.redirect("back");
 };

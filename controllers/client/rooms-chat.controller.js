@@ -3,64 +3,64 @@ const RoomChat = require("../../models/rooms-chat.model");
 
 // [GET] /rooms-chat/
 module.exports.index = async (req, res) => {
-    const userId = res.locals.user.id;
+  const userId = res.locals.user.id;
 
-    const listRoomChat = await RoomChat.find({
-        "users.user_id": userId,
-        typeRoom: "group",
-        deleted: false,
-    });
+  const listRoomChat = await RoomChat.find({
+    "users.user_id": userId,
+    typeRoom: "group",
+    deleted: false,
+  });
 
-    res.render("client/pages/rooms-chat/index", {
-        pageTitle: "Danh Sách Phòng",
-        listRoomChat: listRoomChat,
-    });
+  res.render("client/pages/rooms-chat/index", {
+    pageTitle: "Danh Sách Phòng",
+    listRoomChat: listRoomChat,
+  });
 };
 
 // [GET] /rooms-chat/create
 module.exports.create = async (req, res) => {
-    const friendList = res.locals.user.friendList;
+  const friendList = res.locals.user.friendList;
 
-    for (const friend of friendList) {
-        const infoFriend = await User.findOne({
-            _id: friend.user_id,
-            deleted: false,
-        }).select("fullName avatar");
+  for (const friend of friendList) {
+    const infoFriend = await User.findOne({
+      _id: friend.user_id,
+      deleted: false,
+    }).select("fullName avatar");
 
-        friend.infoFriend = infoFriend;
-    }
+    friend.infoFriend = infoFriend;
+  }
 
-    res.render("client/pages/rooms-chat/create", {
-        pageTitle: "Tạo Phòng",
-        friendList: friendList,
-    });
+  res.render("client/pages/rooms-chat/create", {
+    pageTitle: "Tạo Phòng",
+    friendList: friendList,
+  });
 };
 
 // [POST] /rooms-chat/create
 module.exports.createPost = async (req, res) => {
-    const title = req.body.title;
-    const usersId = req.body.usersId;
+  const title = req.body.title;
+  const usersId = req.body.usersId;
 
-    const dataRoom = {
-        title: title,
-        typeRoom: "group",
-        users: []
-    };
+  const dataRoom = {
+    title: title,
+    typeRoom: "group",
+    users: []
+  };
 
-    for (const userId of usersId) {
-        dataRoom.users.push({
-            user_id: userId,
-            role: "user"
-        });
-    }
-
+  for (const userId of usersId) {
     dataRoom.users.push({
-        user_id: res.locals.user.id,
-        role: "superAdmin"
+      user_id: userId,
+      role: "user"
     });
+  }
 
-    const roomChat = new RoomChat(dataRoom);
-    await roomChat.save();
+  dataRoom.users.push({
+    user_id: res.locals.user.id,
+    role: "superAdmin"
+  });
 
-    res.redirect(`/chat/${roomChat.id}`);
+  const roomChat = new RoomChat(dataRoom);
+  await roomChat.save();
+
+  res.redirect(`/chat/${roomChat.id}`);
 };

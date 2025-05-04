@@ -16,26 +16,26 @@ const roomsChatRoutes = require("./rooms-chat.route");
 
 
 module.exports = (app) => {
-    app.use(categoryMiddleware.category); // Tối ưu dạng middleware bên Client khi mở rộng
-    app.use(cartMiddleware.cartId);
-    app.use(userMiddleware.infoUser);
-    app.use(settingMiddleware.settingGeneral);
+  app.use(categoryMiddleware.category); // Tối ưu dạng middleware bên Client khi mở rộng
+  app.use(cartMiddleware.cartId);
+  app.use(userMiddleware.infoUser);
+  app.use(settingMiddleware.settingGeneral);
 
-    app.use("/", homeRoutes);
+  app.use("/", homeRoutes);
 
-    app.use("/products", productRoutes);
+  app.use("/products", productRoutes);
 
-    app.use("/search", searchRoutes);
+  app.use("/search", searchRoutes);
 
-    app.use("/cart", cartRoutes);
+  app.use("/cart", cartRoutes);
 
-    app.use("/checkout", checkoutRoutes);
+  app.use("/checkout", checkoutRoutes);
 
-    app.use("/user", userRoutes);
+  app.use("/user", userRoutes);
 
-    app.use("/chat", authMiddleware.requireAuth, chatRoutes);
+  app.use("/chat", authMiddleware.requireAuth, chatRoutes);
 
-    app.use("/users", authMiddleware.requireAuth, usersRoutes);
+  app.use("/users", authMiddleware.requireAuth, usersRoutes);
 
-    app.use("/rooms-chat", authMiddleware.requireAuth, roomsChatRoutes);
+  app.use("/rooms-chat", authMiddleware.requireAuth, roomsChatRoutes);
 }

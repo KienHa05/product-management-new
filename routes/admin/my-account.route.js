@@ -13,10 +13,10 @@ router.get("/", controller.index);
 router.get("/edit", controller.edit);
 
 router.patch(
-    "/edit",
-    upload.single("avatar"),
-    uploadCloud.upload,
-    controller.editPatch
+  "/edit",
+  upload.single("avatar"),
+  uploadCloud.upload,
+  controller.editPatch
 );
 
 module.exports = router;
