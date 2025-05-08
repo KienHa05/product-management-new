@@ -13,7 +13,7 @@ block main
           if role.permissions.includes("accounts_create")
             a(
                 href=`${prefixAdmin}/accounts/create`
-                class=`btn btn-outline-success`
+                class=`btn btn-outline-primary mb-3`
             ) + Thêm Mới
 
       table(
@@ -58,15 +58,15 @@ block main
                     ) Dừng Hoạt Động
                 td
                   a(
-                    class=`btn btn-secondary btn-sm`
+                    class=`btn btn-info btn-sm m-1`
                     href=`${prefixAdmin}/accounts/detail/${item.id}`
                   ) Chi Tiết
                   if role.permissions.includes("accounts_edit")
                     a(
-                      class=`btn btn-warning btn-sm ml-1`
+                      class=`btn btn-warning btn-sm m-1`
                       href=`${prefixAdmin}/accounts/edit/${item.id}`
                     ) Sửa
                   if role.permissions.includes("accounts_delete")  
                     button(
-                      class="btn btn-danger btn-sm ml-1"
+                      class="btn btn-danger btn-sm m-1"
                     ) Xóa

@@ -279,12 +279,7 @@ module.exports.editPatch = async (req, res) => {
   req.body.stock = parseInt(req.body.stock);
   req.body.position = parseInt(req.body.position);
 
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-  }
-
   try {
-
     const updatedBy = {
       account_id: res.locals.user.id,
       updatedAt: new Date()
@@ -302,7 +297,7 @@ module.exports.editPatch = async (req, res) => {
     req.flash("error", "Cập Nhật Sản Phẩm Thất Bại!");
   }
 
-  res.redirect(`back`);
+  res.redirect(req.get("Referrer") || "/");
 }
 
 // [GET] /admin/products/detail/:id

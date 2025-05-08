@@ -46,16 +46,16 @@ mixin table-tree(items, level = 1)
                 td
                   a(
                     href=`${prefixAdmin}/products-category/detail/${item.id}`
-                    class="btn btn-info btn-sm"
+                    class="btn btn-info btn-sm m-1"
                   ) Chi Tiết
                   if role.permissions.includes("products-category_edit")
                     a(
                       href=`${prefixAdmin}/products-category/edit/${item.id}`
-                      class="btn btn-warning btn-sm"
+                      class="btn btn-warning btn-sm m-1"
                     ) Sửa
                   if role.permissions.includes("products-category_delete")  
                     button(
-                      class="btn btn-danger btn-sm ml-1"
+                      class="btn btn-danger btn-sm m-1"
                       button-delete
                       data-id=item.id
                     ) Xóa
