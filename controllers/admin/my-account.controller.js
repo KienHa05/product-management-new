@@ -1,4 +1,4 @@
-const md5 = require('md5');
+const bcrypt = require("bcrypt");
 const Account = require("../../models/account.model");
 
 // [GET] /admin/my-account/
@@ -29,7 +29,7 @@ module.exports.editPatch = async (req, res) => {
     req.flash('error', `Email ${req.body.email} đã tồn tại. Vui lòng chọn email khác.`);
   } else {
     if (req.body.password) {
-      req.body.password = md5(req.body.password);
+      req.body.password = await bcrypt.hash(req.body.password, 10);
     } else {
       delete req.body.password;
     }

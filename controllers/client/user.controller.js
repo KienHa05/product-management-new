@@ -1,4 +1,4 @@
-const md5 = require("md5");
+const bcrypt = require("bcrypt");
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
 const Cart = require("../../models/cart.model");
@@ -26,7 +26,7 @@ module.exports.registerPost = async (req, res) => {
     return;
   }
 
-  req.body.password = md5(req.body.password);
+  req.body.password = await bcrypt.hash(req.body.password, 10);
 
   const user = new User(req.body);
   await user.save();
@@ -60,7 +60,8 @@ module.exports.loginPost = async (req, res) => {
     return;
   }
 
-  if (md5(password) !== user.password) {
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
     req.flash("error", "Mật Khẩu Không Chính Xác!");
     res.redirect("back");
     return;
@@ -221,7 +222,7 @@ module.exports.resetPasswordPost = async (req, res) => {
 
   await User.updateOne(
     { tokenUser: tokenUser },
-    { password: md5(password) }
+    { password: await bcrypt.hash(password, 10) }
   );
 
   res.redirect("/");

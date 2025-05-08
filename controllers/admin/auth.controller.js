@@ -1,4 +1,5 @@
-const md5 = require('md5');
+const bcrypt = require('bcrypt');
+
 const Account = require("../../models/account.model");
 
 const systemConfig = require("../../config/system");
@@ -30,8 +31,9 @@ module.exports.loginPost = async (req, res) => {
     return;
   }
 
-  if (md5(password) != user.password) {
-    req.flash("error", "Mật Khẩu Không Chính Xác. Vui Lòng Kiểm Tra Lại");
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    req.flash("error", "Mật Khẩu Không Chính Xác. Vui Lòng Kiểm Tra Lại!");
     res.redirect("back");
     return;
   }
