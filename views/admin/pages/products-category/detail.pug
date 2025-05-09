@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+
+block main
+  if productCategory.title
+    h1(class="mb-4") #{productCategory.title}
+
+  if parentRecord
+    div(class="mb-4")
+      | Danh Mục Cha: 
+      a(href=`/admin/products-category/detail/${parentRecord._id}`)
+        | #{parentRecord.title}
+  else
+    div(class="mb-4")
+      | Danh Mục Cha: Không Có Danh Mục Cha
+
+  if productCategory.thumbnail
+    div(class="mb-4")
+      img(
+        src=productCategory.thumbnail
+        style="width: 100px"
+      )
+
+  if productCategory.status
+    div(class="mb-4")
+      span Trạng Thái: 
+      if productCategory.status === 'active'
+        span(class="badge badge-success") Hoạt Động
+      else
+        span(class="badge badge-danger") Dừng Hoạt Động
+
+  if productCategory.position
+    div(class="mb-4") Vị Trí: <b>#{productCategory.position}</b>
+
+  if productCategory.description
+    div(class="mb-4") Mô Tả: !{productCategory.description}
+
+  a(
+    href=`${prefixAdmin}/products-category/edit/${productCategory.id}`
+    class="btn btn-warning"
+  ) Chỉnh Sửa

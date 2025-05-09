@@ -28,6 +28,13 @@ router.patch(
   upload.single('thumbnail'),
   uploadCloud.upload,
   validate.createPost,
-  controller.editPatch);
+  controller.editPatch
+);
+
+router.delete('/delete/:id', controller.deleteItem);
+
+router.get('/detail/:id', controller.detail);
+
+router.patch('/change-status/:status/:id', controller.changeStatus);
 
 module.exports = router;
