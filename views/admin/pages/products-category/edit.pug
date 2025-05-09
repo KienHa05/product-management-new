@@ -6,6 +6,7 @@ block main
   if role.permissions.includes("products-category_edit")
     h1(class="mb-4") Chỉnh Sửa Danh Mục Sản Phẩm
 
+    +alert-success(5000)
     +alert-error(5000)
 
     form(

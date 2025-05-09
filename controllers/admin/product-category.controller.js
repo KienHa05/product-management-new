@@ -29,12 +29,23 @@ module.exports.index = async (req, res) => {
   const records = await ProductCategory.find(find);
 
   for (const record of records) {
+    // Lấy ra thông tin người tạo
     const user = await Account.findOne({
       _id: record.createdBy.account_id,
     });
 
     if (user) {
       record.accountFullName = user.fullName;
+    }
+
+    // Lấy Ra Thông Tin Người Cập Nhật Gần Nhất
+    const updatedBy = record.updatedBy.slice(-1)[0];
+    if (updatedBy) {
+      const userUpdated = await Account.findOne({
+        _id: updatedBy.account_id,
+      });
+
+      updatedBy.accountFullName = userUpdated.fullName;
     }
   }
 
@@ -134,9 +145,27 @@ module.exports.editPatch = async (req, res) => {
 
   req.body.position = parseInt(req.body.position);
 
-  await ProductCategory.updateOne({ _id: id }, req.body);
+  try {
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    };
 
-  res.redirect("back");
+    await ProductCategory.updateOne(
+      { _id: id },
+      {
+        ...req.body,
+        $push: { updatedBy: updatedBy }
+      }
+    );
+
+    req.flash("success", "Cập Nhật Danh Mục Thành Công!");
+
+  } catch (error) {
+    req.flash("error", "Cập Nhật Sản Phẩm Thất Bại!");
+  }
+  
+  res.redirect(req.get("Referrer") || "/");
 };
 
 // [DELETE] /admin/products-category/delete/:id
@@ -197,21 +226,24 @@ module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
 
-  const updatedBy = {
-    account_id: res.locals.user.id,
-    updatedAt: new Date()
-  };
+  try {
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    };
 
-  await ProductCategory.updateOne(
-    { _id: id },
-    {
-      status: status,
-      $push: { updatedBy: updatedBy }
-    }
-  );
+    await ProductCategory.updateOne(
+      { _id: id },
+      {
+        status: status,
+        $push: { updatedBy: updatedBy }
+      }
+    );
 
-  req.flash("success", "Cập Nhật Trạng Thái Thành Công !");
+    req.flash("success", "Cập Nhật Trạng Thái Thành Công !");
 
+  } catch (error) {
+    req.flash("error", "Cập Nhật Trạng Thái Thất Bại !");
+  }
   res.redirect(req.get("Referrer") || "/");
-
 };

@@ -45,11 +45,19 @@ mixin table-tree(items, level = 1)
                       ) Dừng Hoạt Động
                 td 
                   if item.accountFullName
-                    p #{item.accountFullName} 
-                    p
+                    p.text-center #{item.accountFullName} 
+                    p.text-center
                       +formatDate(item.createdBy.createdAt)                 
                   else
-                    p N/A	
+                    p.text-center N/A	
+                td 
+                  - const updatedBy = item.updatedBy.slice(-1)[0];
+                  if updatedBy
+                    p.text-center #{updatedBy.accountFullName} 
+                    p.text-center
+                      +formatDateTime(updatedBy.updatedAt)
+                  else
+                    p.text-center N/A	
                 td
                   a(
                     href=`${prefixAdmin}/products-category/detail/${item.id}`

@@ -48,6 +48,7 @@ block main
                 th Vị Trí
                 th Trạng Thái
                 th Người Tạo
+                th Người Cập Nhật ( Gần Nhất )
                 th Thao Tác
 
             tbody
@@ -101,6 +102,14 @@ block main
                         p #{item.accountFullName} 
                         p
                           +formatDate(item.createdBy.createdAt)
+                      else
+                        p N/A	
+                    td
+                      - const updatedBy = item.updatedBy.slice(-1)[0];
+                      if updatedBy
+                        p #{updatedBy.accountFullName} 
+                        p
+                          +formatDateTime(updatedBy.updatedAt)
                       else
                         p N/A	
                     td
