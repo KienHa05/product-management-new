@@ -43,6 +43,13 @@ mixin table-tree(items, level = 1)
                         button-change-status
                         class="badge badge-danger"
                       ) Dừng Hoạt Động
+                td 
+                  if item.accountFullName
+                    p #{item.accountFullName} 
+                    p
+                      +formatDate(item.createdBy.createdAt)                 
+                  else
+                    p N/A	
                 td
                   a(
                     href=`${prefixAdmin}/products-category/detail/${item.id}`

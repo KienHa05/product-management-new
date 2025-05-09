@@ -1,4 +1,5 @@
 const ProductCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 
 const systemConfig = require('../../config/system');
 
@@ -26,6 +27,16 @@ module.exports.index = async (req, res) => {
   }
 
   const records = await ProductCategory.find(find);
+
+  for (const record of records) {
+    const user = await Account.findOne({
+      _id: record.createdBy.account_id,
+    });
+
+    if (user) {
+      record.accountFullName = user.fullName;
+    }
+  }
 
   let recordsTree = [];
   let flatRecords = [];
@@ -79,6 +90,10 @@ module.exports.createPost = async (req, res) => {
     req.body.position = count + 1;
   } else {
     req.body.position = parseInt(req.body.position);
+  }
+
+  req.body.createdBy = {
+    account_id: res.locals.user.id
   }
 
   const record = new ProductCategory(req.body);
