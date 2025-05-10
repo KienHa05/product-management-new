@@ -65,9 +65,9 @@ block main
               upload-image-input
           )
           img(
-              src=data.avatar
+              src=(data ? data.avatar : "")
               class="image-preview"
-              upload-image-input
+              upload-image-preview
           )
         div(class="form-group")
           label(for="role_id") Phân Quyền
