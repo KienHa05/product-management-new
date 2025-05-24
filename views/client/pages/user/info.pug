@@ -6,5 +6,25 @@ block main
     .row
       .col-12
         +box-head("Thông Tin Tài Khoản")
-        
-    div #{user}    
+
+        .card
+          .card-body
+            .row.mb-3
+              .col-md-3.font-weight-bold Họ Tên :
+              .col-md-9 #{user.fullName || 'Chưa Cập Nhật'}
+
+            .row.mb-3
+              .col-md-3.font-weight-bold Email :
+              .col-md-9 #{user.email || 'Chưa Cập Nhật'}
+
+            .row.mb-3
+              .col-md-3.font-weight-bold Số Điện Thoại :
+              .col-md-9 #{user.phone || 'Chưa Cập Nhật'}
+
+            .row.mb-3
+              .col-md-3.font-weight-bold Trạng Thái Tài Khoản :
+              .col-md-9 #{user.status == 'active' ? "Đang Hoạt Động" : "Dừng Hoạt Động"}
+
+            .row.mb-3
+              .col-md-3.font-weight-bold Số Bạn Bè :
+              .col-md-9 #{(user.friendList && user.friendList.length) || 0}

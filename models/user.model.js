@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema(
     fullName: String,
     email: String,
     password: String,
+    phone: Number,
     tokenUser: {
       type: String,
       default: () => generate.generateRandomString(30),

@@ -15,7 +15,7 @@ module.exports.register = async (req, res) => {
 
 // [POST] /user/register
 module.exports.registerPost = async (req, res) => {
-
+  // Check email
   const existEmail = await User.findOne({
     email: req.body.email
   });
@@ -25,6 +25,19 @@ module.exports.registerPost = async (req, res) => {
     res.redirect("back");
     return;
   }
+  // End Check email
+
+  // Check phone
+  const existPhone = await User.findOne({
+    phone: req.body.phone
+  });
+
+  if (existPhone) {
+    req.flash("error", "Số Điện Thoại Đã Tồn Tại!");
+    res.redirect("back");
+    return;
+  }
+  // End Check phone
 
   req.body.password = await bcrypt.hash(req.body.password, 10);
 
