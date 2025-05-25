@@ -1,0 +1,28 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success(5000)
+  +alert-error(5000)
+
+  .container.my-3
+    .row
+      .col-12
+        +box-head("Tin Tức & Bài Viết")  
+
+    .row
+      each blog in blogs
+        .col-md-4.col-sm-6.mb-4
+          .card.shadow-sm.border-0
+            if blog.thumbnail
+              a(href='/blogs/' + blog.slug)
+                img.card-img-top(src=blog.thumbnail, alt=blog.title)
+            .card-body
+              h5.card-title
+                a.text-dark(href='/blogs/' + blog.slug)= blog.title
+              p.card-text.text-muted.small
+                | Tác giả: #{blog.author && blog.author.name ? blog.author.name : 'Không rõ'} | 
+                | Ngày đăng: #{blog.publishedAt ? blog.publishedAt.toLocaleDateString('vi-VN') : ''}
+              p.card-text= blog.summary
+              a.btn.btn-sm.btn-outline-primary(href='/blogs/' + blog.slug) Đọc tiếp →
