@@ -39,11 +39,21 @@ module.exports.index = async (req, res) => {
     find.status = req.query.status;
   }
 
+  let keyword = "";
+
+  if (req.query.keyword) {
+    keyword = req.query.keyword;
+
+    const regex = new RegExp(keyword, "i");
+    find.title = regex;
+  }
+
   const blogs = await Blog.find(find);
 
   res.render("admin/pages/blogs/index", {
     pageTitle: "Danh Sách Blog",
     blogs: blogs,
-    filterStatus: filterStatus
+    filterStatus: filterStatus,
+    keyword: keyword
   });
 };
