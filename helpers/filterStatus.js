@@ -1,32 +1,16 @@
-module.exports = (query) => {
-  let filterStatus = [
-    {
-      name: "Tất Cả",
-      status: "",
-      class: "",
-      buttonColor: "primary"
-    },
-    {
-      name: "Hoạt Động",
-      status: "active",
-      class: "",
-      buttonColor: "success"
-    },
-    {
-      name: "Dừng Hoạt Động",
-      status: "inactive",
-      class: "",
-      buttonColor: "danger"
-    }
-  ];
+module.exports = (query, statusList) => {
+  const filterStatus = statusList.map(item => ({
+    ...item,
+    class: "" // reset
+  }));
 
-  if (query.status) {
-    const index = filterStatus.findIndex(item => item.status == query.status);
-    filterStatus[index].class = "active";
-  } else {
-    const index = filterStatus.findIndex(item => item.status == "");
+  const index = query.status
+    ? filterStatus.findIndex(item => item.status === query.status)
+    : filterStatus.findIndex(item => item.status === "");
+
+  if (index !== -1) {
     filterStatus[index].class = "active";
   }
 
   return filterStatus;
-}
+};

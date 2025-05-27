@@ -4,13 +4,14 @@ const Account = require("../../models/account.model");
 const systemConfig = require('../../config/system');
 
 const filterStatusHelper = require('../../helpers/filterStatus');
+const statusPresetHelper = require('../../helpers/statusPreset');
 const searchHelper = require('../../helpers/search');
 const createTreeHelper = require("../../helpers/createTree");
 
 // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
 
-  const filterStatus = filterStatusHelper(req.query);
+  const filterStatus = filterStatusHelper(req.query, statusPresetHelper.productStatus);
 
   let find = {
     deleted: false
@@ -164,7 +165,7 @@ module.exports.editPatch = async (req, res) => {
   } catch (error) {
     req.flash("error", "Cập Nhật Sản Phẩm Thất Bại!");
   }
-  
+
   res.redirect(req.get("Referrer") || "/");
 };
 
