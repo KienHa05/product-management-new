@@ -82,6 +82,56 @@ block main
               td(class="text-center")
                 input(type="checkbox")
 
+          //- Danh Mục Blog
+          tr
+            td(colspan="4")
+              b Danh Mục Blog
+          tr(data-name=`blogs-category_view`)
+            td Xem
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")        
+          tr(data-name=`blogs-category_create`)
+            td Thêm Mới
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")
+          tr(data-name=`blogs-category_edit`)
+            td Chỉnh Sửa
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")          
+          tr(data-name=`blogs-category_delete`)
+            td Xóa
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")
+
+          //- Blog
+          tr
+            td(colspan="4")
+              b Blog
+          tr(data-name=`blogs_view`)
+            td Xem
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")        
+          tr(data-name=`blogs_create`)
+            td Thêm Mới
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")
+          tr(data-name=`blogs_edit`)
+            td Chỉnh Sửa
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")          
+          tr(data-name=`blogs_delete`)
+            td Xóa
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")
+
           //- Nhóm Quyền      
           tr
             td(colspan="4")
