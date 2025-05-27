@@ -2,6 +2,8 @@ const Blog = require("../../models/blog.model");
 
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetHelper = require('../../helpers/statusPreset');
+const searchHelper = require('../../helpers/search');
+
 
 // [GET] /admin/blogs
 module.exports.index = async (req, res) => {
@@ -17,15 +19,13 @@ module.exports.index = async (req, res) => {
   }
   // End Filter Status
 
+  // Search
+  const objectSearch = searchHelper(req.query);
 
-  let keyword = "";
-
-  if (req.query.keyword) {
-    keyword = req.query.keyword;
-
-    const regex = new RegExp(keyword, "i");
-    find.title = regex;
+  if (objectSearch.regex) {
+    find.title = objectSearch.regex;
   }
+  // End Search
 
   const blogs = await Blog.find(find);
 
@@ -33,6 +33,6 @@ module.exports.index = async (req, res) => {
     pageTitle: "Danh Sách Blog",
     blogs: blogs,
     filterStatus: filterStatus,
-    keyword: keyword
+    keyword: objectSearch.keyword
   });
 };
