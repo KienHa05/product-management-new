@@ -28,7 +28,7 @@ const blogSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "draft", // [draft, public]
+      default: "draft", // [draft, published]
     },
     deleted: {
       type: Boolean,
