@@ -24,11 +24,11 @@ const blogSchema = new mongoose.Schema(
     },
     publishedAt: {
       type: Date,
-      default: Date.now,
+      default: null,
     },
     status: {
       type: String,
-      default: "draft",
+      default: "draft", // [draft, public]
     },
     deleted: {
       type: Boolean,
