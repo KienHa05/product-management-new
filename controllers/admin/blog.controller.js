@@ -37,7 +37,7 @@ module.exports.index = async (req, res) => {
   });
 };
 
-// [PATCH] /admin/products/change-status/:status/:id
+// [PATCH] /admin/blogs/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
@@ -46,3 +46,16 @@ module.exports.changeStatus = async (req, res) => {
 
   res.redirect(req.get("Referrer") || "/");
 };
+
+
+// [DELETE] /admin/blogs/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+
+  await Blog.updateOne({ _id: id }, {
+    deleted: true,
+    deletedAt: new Date()
+  });
+
+  res.redirect(req.get("Referrer") || "/");
+}
