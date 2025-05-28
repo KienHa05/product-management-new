@@ -39,16 +39,37 @@ module.exports.index = async (req, res) => {
 
 // [PATCH] /admin/blogs/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
-  const status = req.params.status;
-  const id = req.params.id;
+  const { status, id } = req.params;
 
-  await Blog.updateOne({ _id: id }, { status: status });
+  try {
+    const blog = await Blog.findOne({
+      _id: id
+    });
 
-  req.flash("success", "Cập Nhật Trạng Thái Thành Công !");
+    if (!blog) {
+      req.flash("error", "Không tìm thấy bài viết!");
+      return res.redirect(req.get("Referrer") || "/");
+    }
 
-  res.redirect(req.get("Referrer") || "/");
+    const updateData = {
+      status: status
+    };
+
+    // Chỉ set publishedAt nếu lần đầu published
+    if (status === "published" && !blog.publishedAt) {
+      updateData.publishedAt = new Date();
+    }
+
+    await Blog.updateOne({ _id: id }, updateData);
+
+    req.flash("success", "Cập Nhật Trạng Thái Thành Công !");
+    res.redirect(req.get("Referrer") || "/");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Đã xảy ra lỗi khi cập nhật trạng thái!");
+    res.redirect(req.get("Referrer") || "/");
+  }
 };
-
 
 // [DELETE] /admin/blogs/delete/:id
 module.exports.deleteItem = async (req, res) => {
@@ -62,4 +83,11 @@ module.exports.deleteItem = async (req, res) => {
   req.flash("success", `Đã Xóa Thành Công Bài Viết Này!`);
 
   res.redirect(req.get("Referrer") || "/");
-}
+};
+
+// [GET] /admin/blogs/create
+module.exports.create = async (req, res) => {
+  res.render("admin/pages/blogs/create", {
+    pageTitle: "Thêm Mới Bài Viết",
+  });
+};

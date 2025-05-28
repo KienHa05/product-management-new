@@ -6,7 +6,7 @@ include ../../mixins/alert.pug
 
 block main
   +alert-success(5000)
-  
+
   h1 Danh Sách Blog
 
   .card.mb-3
@@ -21,6 +21,15 @@ block main
   .card.mb-3
     .card-header Danh Sách Blog
       .card-body
+        .row
+          .col-8
+            
+          .col-4
+            a(
+              href=`${prefixAdmin}/blogs/create`
+              class="btn btn-outline-primary mb-3"
+            ) + Thêm Mới
+
         table.table.table-hover.table-sm
           thead
             tr

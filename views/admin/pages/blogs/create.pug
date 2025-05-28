@@ -1,0 +1,100 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  if role.permissions.includes("blogs_create")
+    +alert-error(5000)
+
+    h1(class="mb-4") Thêm Mới Bài Viết
+
+    form(
+      action=`${prefixAdmin}/blogs/create`
+      id="form-create-blog"
+      method="POST"
+    )
+      div(class="form-group")
+        label(for="title") Tiêu Đề
+        input(
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+        )
+
+      //- Cái này nhớ sửa lại vì mình ko làm cây đệ quy
+      //- div(class="form-group")
+      //-   label(for="product_category_id") Danh Mục
+      //-   select(
+      //-     name="product_category_id"
+      //-     id="product_category_id"
+      //-     class="form-control"
+      //-   )
+      //-     option(value="") -- Chọn Danh Mục --
+      //-     if category
+      //-       +select-tree(category)  
+
+      //- div(class="form-group")
+      //-   label(for="thumbnail") Hình Ảnh
+      //-   input(
+      //-     type="text"
+      //-     class="form-control"
+      //-     id="thumbnail"
+      //-     name="thumbnail"
+      //-   )
+
+      div(class="form-group")
+        label(for="summary") Tóm Tắt Ngắn
+        textarea(
+          class="form-control"
+          id="summary"
+          name="summary"
+          rows="5"
+        )
+
+      div(class="form-group")
+        label(for="content") Nội Dung
+        textarea(
+          class="form-control textarea-mce"
+          id="cont"
+          name="content"
+          rows="10"
+        )
+
+      div(class="form-group")
+        label(for="author") Tác Giả
+        input(
+          type="text"
+          class="form-control"
+          id="author"
+          name="author"
+        )
+
+      div(class="form-group form-check form-check-inline")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusDraft"
+          name="status"
+          value="draft"
+          checked
+        )
+        label(for="statusDraft" class="form-check-label") Bản Nháp
+
+      div(class="form-group form-check form-check-inline")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusPublished"
+          name="status"
+          value="published"
+        )
+        label(for="statusPublished" class="form-check-label") Công Khai
+
+      div(class="form-group")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Tạo Bài Viết
+
+    script(src="/admin/js/blog.js")

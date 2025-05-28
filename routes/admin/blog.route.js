@@ -9,4 +9,6 @@ router.patch('/change-status/:status/:id', controller.changeStatus);
 
 router.delete('/delete/:id', controller.deleteItem);
 
+router.get('/create', controller.create);
+
 module.exports = router;
