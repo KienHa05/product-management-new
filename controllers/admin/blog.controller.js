@@ -44,6 +44,8 @@ module.exports.changeStatus = async (req, res) => {
 
   await Blog.updateOne({ _id: id }, { status: status });
 
+  req.flash("success", "Cập Nhật Trạng Thái Thành Công !");
+
   res.redirect(req.get("Referrer") || "/");
 };
 

@@ -1,9 +1,12 @@
 extends ../../layouts/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
+include ../../mixins/alert.pug
 
 
 block main
+  +alert-success(5000)
+  
   h1 Danh Sách Blog
 
   .card.mb-3
