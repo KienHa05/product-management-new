@@ -23,5 +23,5 @@ module.exports.generalPatch = async (req, res) => {
     await record.save();
   }
 
-  res.redirect(`back`);
+  res.redirect(req.get("Referrer") || "/");
 };

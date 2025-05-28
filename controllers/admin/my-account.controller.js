@@ -39,5 +39,5 @@ module.exports.editPatch = async (req, res) => {
     req.flash('success', "Cập Nhật Tài Khoản Thành Công !");
   }
 
-  res.redirect(`back`);
+  res.redirect(req.get("Referrer") || "/");
 }

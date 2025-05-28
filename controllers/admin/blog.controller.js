@@ -39,10 +39,10 @@ module.exports.index = async (req, res) => {
 
 // [PATCH] /admin/products/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
-    const status = req.params.status;
-    const id = req.params.id;
+  const status = req.params.status;
+  const id = req.params.id;
 
-    await Blog.updateOne({ _id: id }, { status: status });
+  await Blog.updateOne({ _id: id }, { status: status });
 
-    res.redirect("back");
+  res.redirect(req.get("Referrer") || "/");
 };

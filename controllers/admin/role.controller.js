@@ -64,7 +64,7 @@ module.exports.editPatch = async (req, res) => {
     req.flash("error", "Cập Nhật Nhóm Quyền Thất Bại!");
   }
 
-  res.redirect(`back`);
+  res.redirect(req.get("Referrer") || "/");
 };
 
 // [GET] /admin/roles/permissions
