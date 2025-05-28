@@ -59,5 +59,7 @@ module.exports.deleteItem = async (req, res) => {
     deletedAt: new Date()
   });
 
+  req.flash("success", `Đã Xóa Thành Công Bài Viết Này!`);
+
   res.redirect(req.get("Referrer") || "/");
 }
