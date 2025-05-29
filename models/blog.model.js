@@ -30,6 +30,7 @@ const blogSchema = new mongoose.Schema(
       type: String,
       default: "draft", // [draft, published]
     },
+    position: Number,
     deleted: {
       type: Boolean,
       default: false,

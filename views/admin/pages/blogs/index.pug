@@ -37,6 +37,7 @@ block main
               th Hình Ảnh
               th Tiêu Đề
               th Tác Giả
+              th Vị Trí
               th Trạng Thái
               th Thao Tác
 
@@ -53,6 +54,14 @@ block main
                   )
                 td #{item.title}
                 td #{item.author.name}
+                td 
+                  input(
+                    type="number"
+                    value=item.position
+                    style="width: 60px"
+                    min="1"
+                    name="position"
+                  )
                 td
                   if item.status == "published"
                     a( 

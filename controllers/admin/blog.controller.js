@@ -1,5 +1,7 @@
 const Blog = require("../../models/blog.model");
 
+const systemConfig = require("../../config/system");
+
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetHelper = require('../../helpers/statusPreset');
 const searchHelper = require('../../helpers/search');
@@ -90,4 +92,25 @@ module.exports.create = async (req, res) => {
   res.render("admin/pages/blogs/create", {
     pageTitle: "Thêm Mới Bài Viết",
   });
+};
+
+// [POST] /admin/blogs/create
+module.exports.createPost = async (req, res) => {
+  if (req.body.position == "") {
+    const countBlogs = await Blog.count();
+    req.body.position = countBlogs + 1;
+  } else {
+    req.body.position = parseInt(req.body.position);
+  }
+
+  req.body.createdBy = {
+    account_id: res.locals.user.id
+  }
+
+  const blog = new Blog(req.body);
+  await blog.save();
+
+  req.flash("success", "Tạo Mới Bài Viết Thành Công !");
+
+  res.redirect(`${systemConfig.prefixAdmin}/blogs`);
 };

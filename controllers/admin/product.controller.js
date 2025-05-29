@@ -240,6 +240,8 @@ module.exports.createPost = async (req, res) => {
   const product = new Product(req.body);
   await product.save();
 
+  req.flash("success", "Tạo Mới Sản Phẩm Thành Công !");
+
   res.redirect(`${systemConfig.prefixAdmin}/products`);
 }
 
