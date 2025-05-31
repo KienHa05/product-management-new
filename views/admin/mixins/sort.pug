@@ -1,16 +1,15 @@
-mixin sort()
+mixin sort(presets)
+  - const sortOptions = presets || [];
+
   div(sort)
-    select(
+    if sortOptions.length > 0
+      select(
         class="form-control"
         name="sort"
         sort-select
-    )
-        option(value="position-desc") Vị Trí Giảm Dần
-        option(value="position-asc") Vị Trí Tăng Dần
-        option(value="price-desc") Giá Giảm Dần
-        option(value="price-asc") Giá Tăng Dần
-        option(value="title-asc") Tiêu Đề A - Z
-        option(value="title-desc") Tiêu Đề Z - A
+      )
+        each option in sortOptions
+          option(value=option.value) #{option.label}
 
     button(
       class="btn btn-danger mt-2"

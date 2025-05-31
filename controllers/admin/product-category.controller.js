@@ -4,14 +4,14 @@ const Account = require("../../models/account.model");
 const systemConfig = require('../../config/system');
 
 const filterStatusHelper = require('../../helpers/filterStatus');
-const statusPresetHelper = require('../../helpers/statusPreset');
+const statusPresetConstant = require('../../constants/statusPreset');
 const searchHelper = require('../../helpers/search');
 const createTreeHelper = require("../../helpers/createTree");
 
 // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
 
-  const filterStatus = filterStatusHelper(req.query, statusPresetHelper.productStatus);
+  const filterStatus = filterStatusHelper(req.query, statusPresetConstant.productStatus);
 
   let find = {
     deleted: false

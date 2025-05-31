@@ -5,7 +5,8 @@ const Account = require("../../models/account.model");
 const systemConfig = require("../../config/system");
 
 const filterStatusHelper = require('../../helpers/filterStatus');
-const statusPresetHelper = require('../../helpers/statusPreset');
+const statusPresetConstant = require('../../constants/statusPreset');
+const sortPresetConstant = require('../../constants/sortPreset');
 const searchHelper = require('../../helpers/search');
 const paginationHelper = require('../../helpers/pagination');
 
@@ -13,7 +14,7 @@ const createTreeHelper = require("../../helpers/createTree");
 
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
-  const filterStatus = filterStatusHelper(req.query, statusPresetHelper.productStatus);
+  const filterStatus = filterStatusHelper(req.query, statusPresetConstant.productStatus);
   let objectSearch = searchHelper(req.query);
 
   let find = {
@@ -92,7 +93,8 @@ module.exports.index = async (req, res) => {
     products: products,
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
-    pagination: objectPagination
+    pagination: objectPagination,
+    sortPresetConstant: sortPresetConstant
   });
 }
 

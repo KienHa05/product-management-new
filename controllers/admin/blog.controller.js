@@ -3,14 +3,15 @@ const Blog = require("../../models/blog.model");
 const systemConfig = require("../../config/system");
 
 const filterStatusHelper = require('../../helpers/filterStatus');
-const statusPresetHelper = require('../../helpers/statusPreset');
+const statusPresetConstant = require('../../constants/statusPreset');
+const sortPresetConstant = require('../../constants/sortPreset');
 const searchHelper = require('../../helpers/search');
 
 
 // [GET] /admin/blogs
 module.exports.index = async (req, res) => {
   // Filter Status
-  const filterStatus = filterStatusHelper(req.query, statusPresetHelper.blogStatus);
+  const filterStatus = filterStatusHelper(req.query, statusPresetConstant.blogStatus);
 
   let find = {
     deleted: false
@@ -29,13 +30,25 @@ module.exports.index = async (req, res) => {
   }
   // End Search
 
-  const blogs = await Blog.find(find);
+  // Sort
+  let sort = {};
+
+  if (req.query.sortKey && req.query.sortValue) {
+    sort[req.query.sortKey] = req.query.sortValue;
+  } else {
+    sort.position = "desc";
+  }
+  // End Sort
+
+  const blogs = await Blog.find(find)
+    .sort(sort);
 
   res.render("admin/pages/blogs/index", {
     pageTitle: "Danh Sách Blog",
     blogs: blogs,
     filterStatus: filterStatus,
-    keyword: objectSearch.keyword
+    keyword: objectSearch.keyword,
+    sortPresetConstant: sortPresetConstant
   });
 };
 
