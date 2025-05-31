@@ -1,4 +1,5 @@
 const Blog = require("../../models/blog.model");
+const BlogCategory = require("../../models/blog-category.model");
 
 const systemConfig = require("../../config/system");
 
@@ -102,8 +103,15 @@ module.exports.deleteItem = async (req, res) => {
 
 // [GET] /admin/blogs/create
 module.exports.create = async (req, res) => {
+  let find = {
+    deleted: false
+  };
+
+  const blogCategory = await BlogCategory.find(find);
+
   res.render("admin/pages/blogs/create", {
     pageTitle: "Thêm Mới Bài Viết",
+    blogCategory: blogCategory
   });
 };
 

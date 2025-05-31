@@ -23,26 +23,17 @@ block main
           required
         )
 
-      //- Cái này nhớ sửa lại vì mình ko làm cây đệ quy
-      //- div(class="form-group")
-      //-   label(for="product_category_id") Danh Mục
-      //-   select(
-      //-     name="product_category_id"
-      //-     id="product_category_id"
-      //-     class="form-control"
-      //-   )
-      //-     option(value="") -- Chọn Danh Mục --
-      //-     if category
-      //-       +select-tree(category)  
-
-      //- div(class="form-group")
-      //-   label(for="thumbnail") Hình Ảnh
-      //-   input(
-      //-     type="text"
-      //-     class="form-control"
-      //-     id="thumbnail"
-      //-     name="thumbnail"
-      //-   )
+      div(class="form-group")
+        label(for="blog_category_id") Danh Mục Blog
+        select(
+          name="blog_category_id"
+          id="blog_category_id"
+          class="form-control"
+        )
+          option(value="") -- Chọn Danh Mục --
+          if blogCategory
+            each item in blogCategory 
+              option(value=item.id) #{item.title}
 
       div(class="form-group")
         label(for="summary") Tóm Tắt Ngắn

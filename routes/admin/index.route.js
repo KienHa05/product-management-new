@@ -11,6 +11,7 @@ const authRoutes = require("./auth.route");
 const myAccountRoutes = require("./my-account.route");
 const settingRoutes = require("./setting.route");
 const blogsRoutes = require("./blog.route");
+const blogCategoryRoutes = require("./blog-category.route");
 
 module.exports = (app) => {
   const PATH_ADMIN = systemConfig.prefixAdmin;
@@ -55,5 +56,11 @@ module.exports = (app) => {
     PATH_ADMIN + "/blogs",
     authMiddleware.requireAuth,
     blogsRoutes
+  );
+
+  app.use(
+    PATH_ADMIN + "/blogs-category",
+    authMiddleware.requireAuth,
+    blogCategoryRoutes
   );
 }
