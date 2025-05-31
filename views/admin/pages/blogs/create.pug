@@ -11,6 +11,7 @@ block main
       action=`${prefixAdmin}/blogs/create`
       id="form-create-blog"
       method="POST"
+      enctype="multipart/form-data"
     )
       div(class="form-group")
         label(for="title") Tiêu Đề
@@ -68,6 +69,25 @@ block main
           class="form-control"
           id="author"
           name="author"
+        )
+
+      div(
+        class="form-group"
+        upload-image
+      )
+        label(for="thumbnail") Hình Ảnh
+        input(
+          type="file"
+          class="form-control-file"
+          id="thumbnail"
+          name="thumbnail"
+          accept="image/*"
+          upload-image-input
+        )
+        img(
+          src="" 
+          upload-image-preview
+          class="image-preview"
         )
 
       div(class="form-group")

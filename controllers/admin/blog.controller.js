@@ -109,16 +109,25 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/blogs/create
 module.exports.createPost = async (req, res) => {
+  // Xử lí Position
   if (req.body.position == "") {
     const countBlogs = await Blog.count();
     req.body.position = countBlogs + 1;
   } else {
     req.body.position = parseInt(req.body.position);
   }
+  // End Xử lí Position
 
+  // Log ai tạo
   req.body.createdBy = {
     account_id: res.locals.user.id
   }
+  // End Log ai tạo
+
+  // Xử lí publishedAt
+  const { status } = req.body;
+  req.body.publishedAt = (status === "published" ? new Date() : null);
+  // End Xử lí publishedAt
 
   const blog = new Blog(req.body);
   await blog.save();

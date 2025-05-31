@@ -18,10 +18,7 @@ const blogSchema = new mongoose.Schema(
     },
     summary: String,
     content: String,
-    author: {
-      account_id: String,
-      name: String,
-    },
+    author: String,
     publishedAt: {
       type: Date,
       default: null,

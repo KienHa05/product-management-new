@@ -22,7 +22,7 @@ block main
               h5.card-title
                 a.text-dark(href=`/blogs/detail/${blog.slug}`) #{blog.title}
               p.card-text.text-muted.small
-                | Tác giả: #{blog.author && blog.author.name ? blog.author.name : 'Không rõ'} | 
+                | Tác giả: #{blog.author && blog.author ? blog.author : 'Không rõ'} | 
                 | Ngày đăng: #{blog.publishedAt ? blog.publishedAt.toLocaleDateString('vi-VN') : ''}
               p.card-text #{blog.summary}
               a.btn.btn-sm.btn-outline-primary(href=`/blogs/detail/${blog.slug}`) Xem thêm
