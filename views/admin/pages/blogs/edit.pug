@@ -1,0 +1,127 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  if role.permissions.includes("blogs_edit")
+    +alert-success(5000)
+    +alert-error(5000)
+    
+    h1(class="mb-4") Chỉnh Sửa Bài Viết
+
+    form(
+      action=`${prefixAdmin}/blogs/edit/${blog.id}?_method=PATCH`
+      id="form-edit-blog"
+      method="POST"
+      enctype="multipart/form-data"
+    )
+
+      div(class="form-group")
+        label(for="title") Tiêu Đề
+        input(
+          type="text"
+          class="form-control"
+          id="title"
+          name="title"
+          required
+          value=blog.title
+        )
+      div(class="form-group")
+        label(for="blog_category_id") Danh Mục Blog
+        select(
+          name="blog_category_id"
+          id="blog_category_id"
+          class="form-control"
+        )
+          option(value="") -- Chọn Danh Mục --
+          if blogCategory
+            each item in blogCategory 
+              option(
+                value=item.id
+                selected=(item.id == blog.blog_category_id ? true : false)
+              ) #{item.title}
+                     
+      div(class="form-group")
+        label(for="summary") Tóm Tắt Ngắn
+        textarea(
+          class="form-control"
+          id="summary"
+          name="summary"
+          rows="5"
+        ) #{blog.summary}
+
+      div(class="form-group")
+        label(for="content") Nội Dung
+        textarea(
+          class="form-control textarea-mce"
+          id="cont"
+          name="content"
+          rows="10"
+        ) #{blog.content}
+
+      div(class="form-group")
+        label(for="author") Tác Giả
+        input(
+          type="text"
+          class="form-control"
+          id="author"
+          name="author"
+          value=blog.author
+        )  
+
+      div(
+        class="form-group"
+        upload-image
+      )
+        label(for="thumbnail") Hình Ảnh
+        input(
+          type="file"
+          class="form-control-file"
+          id="thumbnail"
+          name="thumbnail"
+          accept="image/*"
+          upload-image-input
+        )
+        img(
+          src=blog.thumbnail
+          upload-image-preview
+          class="image-preview"
+        )
+      div(class="form-group")
+        label(for="position") Vị Trí
+        input(
+          type="number"
+          class="form-control"
+          id="position"
+          name="position"
+          placeholder="Tự Động Tăng"
+          min="1"
+          value=blog.position
+        )
+      div(class="form-group form-check form-check-inline")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusPublished"
+          name="status"
+          value="published"
+          checked=(blog.status == "published" ? true : false)
+        )
+        label(for="statusPublished" class="form-check-label") Công Khai
+        
+      div(class="form-group form-check form-check-inline")
+        input(
+          type="radio"
+          class="form-check-input"
+          id="statusDraft"
+          name="status"
+          value="draft"
+          checked=(blog.status == "draft" ? true : false)
+        )
+        label(for="statusDraft" class="form-check-label") Bản Nháp
+      div(class="form-group")
+        button(
+          type="submit"
+          class="btn btn-primary"
+        ) Cập Nhật
+        
+    script(src="/admin/js/blog.js")

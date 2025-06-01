@@ -144,3 +144,54 @@ module.exports.createPost = async (req, res) => {
 
   res.redirect(`${systemConfig.prefixAdmin}/blogs`);
 };
+
+// [GET] /admin/blogs/edit/:id
+module.exports.edit = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id
+    };
+
+    const blog = await Blog.findOne(find);
+
+    const blogCategory = await BlogCategory.find({
+      deleted: false
+    });
+
+    res.render("admin/pages/blogs/edit", {
+      pageTitle: "Chỉnh Sửa Bài Viết",
+      blog: blog,
+      blogCategory: blogCategory
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/blogs`);
+  }
+};
+
+// [PATCH] /admin/blogs/edit/:id
+module.exports.editPatch = async (req, res) => {
+  const id = req.params.id;
+
+  req.body.position = parseInt(req.body.position);
+
+  try {
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    };
+
+    await Blog.updateOne(
+      { _id: id },
+      {
+        ...req.body,
+        $push: { updatedBy: updatedBy }
+      }
+    );
+    req.flash("success", "Cập Nhật Bài Viết Thành Công!");
+  } catch (error) {
+    req.flash("error", "Cập Nhật Bài Viết Thất Bại!");
+  }
+
+  res.redirect(req.get("Referrer") || "/");
+};
