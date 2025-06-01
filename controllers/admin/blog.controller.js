@@ -198,3 +198,29 @@ module.exports.editPatch = async (req, res) => {
 
   res.redirect(req.get("Referrer") || "/");
 };
+
+// [GET] /admin/blogs/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id
+    };
+
+    const blog = await Blog.findOne(find);
+
+    const blogCategoryId = blog.blog_category_id;
+
+    const blogCategory = await BlogCategory.findOne({
+      _id: blogCategoryId
+    });
+
+    res.render("admin/pages/blogs/detail", {
+      pageTitle: blog.title,
+      blog: blog,
+      blogCategory: blogCategory
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/blogs`);
+  }
+};

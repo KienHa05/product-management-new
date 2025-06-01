@@ -1,0 +1,41 @@
+extends ../../layouts/default.pug
+
+block main
+  if blog.title
+    h1(class="mb-4") #{blog.title}
+
+  if blogCategory.title
+    div(class="mb-4") Danh Mục : <b>#{blogCategory.title}</b>
+
+  if blog.summary
+    div(class="mb-4") Tóm Tắt Ngắn : <b>#{blog.summary}</b>
+
+  if blog.thumbnail
+    div(class="mb-4")
+      img(
+        src=blog.thumbnail
+        style="width: 100px"
+      )
+
+  if blog.status
+    div(class="mb-4")
+      span Trạng Thái: 
+      if blog.status === 'published'
+        span(class="badge badge-success") Công Khai
+      else
+        span(class="badge badge-warning") Bản Nháp
+
+  if blog.position
+    div(class="mb-4") Vị Trí: <b>#{blog.position}</b>
+
+  if blog.author
+    div(class="mb-4") Tác Giả : #{blog.author}
+
+  if blog.content
+    div(class="mb-4") !{blog.content}
+
+  a(
+    href=`${prefixAdmin}/blogs/edit/${blog.id}`
+    class="btn btn-warning"
+  ) Chỉnh Sửa
+

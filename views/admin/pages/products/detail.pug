@@ -4,6 +4,9 @@ block main
   if product.title
     h1(class="mb-4") #{product.title}
 
+  if productCategory.title
+    div(class="mb-4") Danh Mục : <b>#{productCategory.title}</b>
+
   if product.price
     div(class="mb-4") Giá: <b>#{product.price}$</b>
 
@@ -38,5 +41,3 @@ block main
     href=`${prefixAdmin}/products/edit/${product.id}`
     class="btn btn-warning"
   ) Chỉnh Sửa
-
-  script(src="/admin/js/product.js")

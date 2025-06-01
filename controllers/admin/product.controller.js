@@ -306,7 +306,6 @@ module.exports.editPatch = async (req, res) => {
 
 // [GET] /admin/products/detail/:id
 module.exports.detail = async (req, res) => {
-
   try {
     const find = {
       deleted: false,
@@ -315,9 +314,16 @@ module.exports.detail = async (req, res) => {
 
     const product = await Product.findOne(find);
 
+    const productCategoryId = product.product_category_id;
+
+    const productCategory = await ProductCategory.findOne({
+      _id: productCategoryId
+    });
+
     res.render("admin/pages/products/detail", {
       pageTitle: product.title,
-      product: product
+      product: product,
+      productCategory: productCategory
     });
   } catch (error) {
     res.redirect(`${systemConfig.prefixAdmin}/products`);
