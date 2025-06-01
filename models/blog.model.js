@@ -32,10 +32,10 @@ const blogSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // deletedBy: {
-    //   account_id: String,
-    //   deletedAt: Date,
-    // },
+    deletedBy: {
+      account_id: String,
+      deletedAt: Date,
+    },
     deletedAt: Date,
     createdBy: {
       account_id: String,
