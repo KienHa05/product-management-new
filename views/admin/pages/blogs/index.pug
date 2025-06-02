@@ -3,6 +3,7 @@ include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
+include ../../mixins/moment.pug
 
 
 block main
@@ -48,6 +49,8 @@ block main
                 th Tác Giả
                 th Vị Trí
                 th Trạng Thái
+                th Người Tạo
+                th Người Cập Nhật ( Gần Nhất )
                 th Thao Tác
 
             tbody
@@ -88,6 +91,19 @@ block main
                         button-change-status
                         class="badge badge-warning"
                       ) Bản Nháp
+                  td
+                    if item.createdBy && item.createdBy.accountFullName
+                      p.text-center #{item.createdBy.accountFullName} 
+                      p.text-center
+                        +formatDate(item.createdBy.createdAt)        
+                    else
+                      p.text-center N/A	
+                  td
+                    - const updatedBy = item.updatedBy.slice(-1)[0];
+                    if updatedBy
+                      p.text-center #{updatedBy.accountFullName} 
+                      p.text-center
+                        +formatDateTime(updatedBy.updatedAt)    
                   td 
                     a(
                       href=`${prefixAdmin}/blogs/detail/${item.id}`

@@ -107,10 +107,10 @@ block main
                           class="badge badge-danger"
                         ) Dừng Hoạt Động
                   td
-                    if item.accountFullName
-                      p.text-center #{item.accountFullName} 
+                    if item.createdBy && item.createdBy.accountFullName
+                      p.text-center #{item.createdBy.accountFullName} 
                       p.text-center
-                        +formatDate(item.createdBy.createdAt)                 
+                        +formatDate(item.createdBy.createdAt)        
                     else
                       p.text-center N/A	
                   td

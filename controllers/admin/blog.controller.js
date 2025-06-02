@@ -1,5 +1,6 @@
 const Blog = require("../../models/blog.model");
 const BlogCategory = require("../../models/blog-category.model");
+const Account = require("../../models/account.model");
 
 const systemConfig = require("../../config/system");
 
@@ -43,6 +44,35 @@ module.exports.index = async (req, res) => {
 
   const blogs = await Blog.find(find)
     .sort(sort);
+
+  for (const blog of blogs) {
+    // Lấy Ra Thông Tin Người Tạo
+    if (blog.createdBy && blog.createdBy.account_id) {
+      const userCreated = await Account.findOne({
+        _id: blog.createdBy.account_id,
+      });
+
+      if (userCreated) {
+        blog.createdBy.accountFullName = userCreated.fullName;
+      } else {
+        blog.createdBy.accountFullName = "Không rõ ai"; // Tránh lỗi undefined
+      }
+    }
+
+    // Lấy Ra Thông Tin Người Cập Nhật Gần Nhất Trên Giao Diện - Lưu Full Tất Cả Trong DB
+    const userUpdatedId = blog.updatedBy.slice(-1)[0];
+    if (userUpdatedId) {
+      const userUpdated = await Account.findOne({
+        _id: userUpdatedId.account_id,
+      });
+
+      if (userUpdated) {
+        userUpdatedId.accountFullName = userUpdated.fullName;
+      } else {
+        userUpdatedId.accountFullName = "Không rõ ai";
+      }
+    }
+  }
 
   res.render("admin/pages/blogs/index", {
     pageTitle: "Danh Sách Blog",
