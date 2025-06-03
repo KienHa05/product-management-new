@@ -64,4 +64,39 @@ module.exports.index = async (req, res) => {
   });
 };
 
+// [GET] /admin/blogs-category/create
+module.exports.create = async (req, res) => {
+  res.render("admin/pages/blogs-category/create", {
+    pageTitle: "Thêm Mới Danh Mục Bài Viết",
+  });
+};
 
+// [POST] /admin/blogs-category/create
+module.exports.createPost = async (req, res) => {
+  // const permissions = res.locals.role.permissions;
+
+  // if (permissions.includes("blogs-category_create")) {
+  //     console.log("Có Quyền");
+  // } else {
+  //     res.send("403");
+  //     return;
+  // }
+
+  if (req.body.position == "") {
+    const count = await BlogCategory.count();
+    req.body.position = count + 1;
+  } else {
+    req.body.position = parseInt(req.body.position);
+  }
+
+  req.body.createdBy = {
+    account_id: res.locals.user.id
+  }
+
+  const record = new BlogCategory(req.body);
+  await record.save();
+
+  req.flash("success", "Thêm Mới Danh Mục Blog Thành Công !");
+
+  res.redirect(`${systemConfig.prefixAdmin}/blogs-category`);
+};
