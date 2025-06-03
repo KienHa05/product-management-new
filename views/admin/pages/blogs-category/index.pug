@@ -12,14 +12,14 @@ block main
       +alert-success(3000)
       +alert-error(3000)
 
-    //- .card.mb-3
-    //-   .card-header Bộ Lọc và Tìm Kiếm
-    //-   .card-body
-    //-     .row
-    //-       .col-6
-    //-         +filter-status(filterStatus)
-    //-       .col-6
-    //-         +search(keyword)
+    .card.mb-3
+      .card-header Bộ Lọc và Tìm Kiếm
+      .card-body
+        .row
+          .col-6
+            +filter-status(filterStatus)
+          .col-6
+            +search(keyword)
           
     .card.mb-3
       .card-header Danh Sách Danh Mục
@@ -44,6 +44,8 @@ block main
                 th Tiêu Đề
                 th Vị Trí
                 th Trạng Thái
+                th Người Tạo
+                th Người Cập Nhật ( Gần Nhất )
                 th Thao Tác
 
             tbody
@@ -84,9 +86,32 @@ block main
                         class="badge badge-warning"
                       ) Dừng Hoạt Động
                   td
-                    button(class="btn btn-warning btn-sm m-1") Sửa   
+                      if item.createdBy && item.createdBy.accountFullName
+                        p.text-center #{item.createdBy.accountFullName} 
+                        p.text-center
+                          +formatDate(item.createdBy.createdAt)        
+                      else
+                        p.text-center N/A	
+                  td
+                    - const updatedBy = item.updatedBy.slice(-1)[0];
+                    if updatedBy
+                      p #{updatedBy.accountFullName} 
+                      p
+                        +formatDateTime(updatedBy.updatedAt)
+                    else
+                      p N/A	    
+                  td
+                    a(
+                      class="btn btn-info btn-sm m-1"
+                      href=`${prefixAdmin}/blogs-category/detail/${item.id}`
+                    ) Chi Tiết
+                    if role.permissions.includes("blogs-category_edit")
+                      a(
+                        class="btn btn-warning btn-sm m-1"
+                        href=`${prefixAdmin}/blogs-category/edit/${item.id}`
+                      ) Sửa
                     button(
-                      class="btn btn-danger btn-sm m-1"
+                      class="btn btn-danger btn-sm m-1 m-1"
                       button-delete
                       data-id=item.id
                     ) Xóa

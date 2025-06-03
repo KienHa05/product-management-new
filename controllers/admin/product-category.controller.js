@@ -31,22 +31,30 @@ module.exports.index = async (req, res) => {
 
   for (const record of records) {
     // Lấy ra thông tin người tạo
-    const user = await Account.findOne({
-      _id: record.createdBy.account_id,
-    });
-
-    if (user) {
-      record.accountFullName = user.fullName;
-    }
-
-    // Lấy Ra Thông Tin Người Cập Nhật Gần Nhất
-    const updatedBy = record.updatedBy.slice(-1)[0];
-    if (updatedBy) {
-      const userUpdated = await Account.findOne({
-        _id: updatedBy.account_id,
+    if (record.createdBy && record.createdBy.account_id) {
+      const userCreated = await Account.findOne({
+        _id: record.createdBy.account_id,
       });
 
-      updatedBy.accountFullName = userUpdated.fullName;
+      if (userCreated) {
+        record.createdBy.accountFullName = userCreated.fullName;
+      } else {
+        record.createdBy.accountFullName = "Không rõ ai"; // Tránh lỗi undefined
+      }
+    }
+
+    // Lấy Ra Thông Tin Người Cập Nhật Gần Nhất Trên Giao Diện - Lưu Full Tất Cả Trong DB
+    const userUpdatedId = record.updatedBy.slice(-1)[0];
+    if (userUpdatedId) {
+      const userUpdated = await Account.findOne({
+        _id: userUpdatedId.account_id,
+      });
+
+      if (userUpdated) {
+        userUpdatedId.accountFullName = userUpdated.fullName;
+      } else {
+        userUpdatedId.accountFullName = "Không rõ ai";
+      }
     }
   }
 
