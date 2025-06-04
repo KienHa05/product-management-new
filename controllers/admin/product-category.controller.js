@@ -173,7 +173,7 @@ module.exports.editPatch = async (req, res) => {
     req.flash("success", "Cập Nhật Danh Mục Thành Công!");
 
   } catch (error) {
-    req.flash("error", "Cập Nhật Sản Phẩm Thất Bại!");
+    req.flash("error", "Cập Nhật Danh Mục Sản Phẩm Thất Bại!");
   }
 
   res.redirect(req.get("Referrer") || "/");

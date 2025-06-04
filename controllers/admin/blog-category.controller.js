@@ -100,3 +100,51 @@ module.exports.createPost = async (req, res) => {
 
   res.redirect(`${systemConfig.prefixAdmin}/blogs-category`);
 };
+
+// [GET] /admin/blogs-category/edit/:id
+module.exports.edit = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const data = await BlogCategory.findOne({
+      _id: id,
+      deleted: false,
+    });
+
+    res.render("admin/pages/blogs-category/edit", {
+      pageTitle: "Chỉnh Sửa Danh Mục Bài Viết",
+      data: data,
+    });
+  } catch (error) {
+    req.redirect(`${systemConfig.prefixAdmin}/blogs-category`);
+  }
+};
+
+// [PATCH] /admin/blogs-category/edit/:id
+module.exports.editPatch = async (req, res) => {
+  const id = req.params.id;
+
+  req.body.position = parseInt(req.body.position);
+
+  try {
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    };
+
+    await BlogCategory.updateOne(
+      { _id: id },
+      {
+        ...req.body,
+        $push: { updatedBy: updatedBy }
+      }
+    );
+
+    req.flash("success", "Cập Nhật Danh Mục Blog Thành Công!");
+
+  } catch (error) {
+    req.flash("error", "Cập Nhật Danh Mục Blog Thất Bại!");
+  }
+
+  res.redirect(req.get("Referrer") || "/");
+};
