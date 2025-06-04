@@ -40,6 +40,22 @@ block main
 
     .col-6
       .card.mb-4
+        .card-header Danh Mục Blog
+        .card-body
+          p Số Lượng: <b>#{statistic.categoryBlog.total}</b>        
+          p Hoạt Động: <b>#{statistic.categoryBlog.active}</b>        
+          p Dừng Hoạt Động: <b>#{statistic.categoryBlog.inactive}</b>
+
+    .col-6
+      .card.mb-4
+        .card-header Blog
+        .card-body
+          p Số Lượng: <b>#{statistic.blog.total}</b>        
+          p Hoạt Động: <b>#{statistic.blog.published}</b>        
+          p Dừng Hoạt Động: <b>#{statistic.blog.draft}</b>
+
+    .col-6
+      .card.mb-4
         .card-header Tài Khoản Admin
         .card-body
           p Số Lượng: <b>#{statistic.account.total}</b>        
