@@ -168,3 +168,30 @@ module.exports.deleteItem = async (req, res) => {
 
   res.redirect("back");
 };
+
+// [PATCH] /admin/blogs/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+  const status = req.params.status;
+  const id = req.params.id;
+
+  try {
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date()
+    };
+
+    await BlogCategory.updateOne(
+      { _id: id },
+      {
+        status: status,
+        $push: { updatedBy: updatedBy }
+      }
+    );
+
+    req.flash("success", "Cập Nhật Trạng Thái Thành Công !");
+
+  } catch (error) {
+    req.flash("error", "Cập Nhật Trạng Thái Thất Bại !");
+  }
+  res.redirect(req.get("Referrer") || "/");
+};
