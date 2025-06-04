@@ -31,4 +31,6 @@ router.patch(
   controller.editPatch
 );
 
+router.delete('/delete/:id', controller.deleteItem);
+
 module.exports = router;

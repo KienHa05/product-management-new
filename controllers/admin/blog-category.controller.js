@@ -148,3 +148,23 @@ module.exports.editPatch = async (req, res) => {
 
   res.redirect(req.get("Referrer") || "/");
 };
+
+// [DELETE] /admin/blogs-category/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+
+  await BlogCategory.updateOne(
+    { _id: id },
+    {
+      deleted: true,
+      deletedBy: {
+        account_id: res.locals.user.id,
+        deletedAt: new Date()
+      },
+    }
+  );
+
+  req.flash("success", `Đã Xóa Thành Công Danh Mục Này!`);
+
+  res.redirect("back");
+};

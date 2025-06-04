@@ -2,12 +2,12 @@ mixin table-tree(items, level = 1)
   each item, index in items
     - const prefix = Array(level + 1).join("-- ")
     tr
-      //- td
-      //-   input(
-      //-     type="checkbox"
-      //-     name="id"
-      //-     value=item.id
-      //-   )
+      td
+        input(
+          type="checkbox"
+          name="id"
+          value=item.id
+        )
       td #{item.index}
       td
         img( 

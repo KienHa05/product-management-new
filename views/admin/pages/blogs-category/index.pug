@@ -39,6 +39,8 @@ block main
           )
             thead
               tr
+                th
+                  input(type="checkbox" name="checkall")
                 th STT
                 th Hình Ảnh
                 th Tiêu Đề
@@ -51,6 +53,12 @@ block main
             tbody
               each item, index in records 
                 tr
+                  td
+                    input(
+                      type="checkbox"
+                      name="id"
+                      value=item.id
+                    )
                   td #{index + 1}
                   td
                     img( 
