@@ -1,0 +1,31 @@
+extends ../../layouts/default.pug
+
+block main
+  if blogCategory.title
+    h1(class="mb-4") #{blogCategory.title}
+
+  if blogCategory.thumbnail
+    div(class="mb-4")
+      img(
+        src=blogCategory.thumbnail
+        style="width: 100px"
+      )
+
+  if blogCategory.status
+    div(class="mb-4")
+      span Trạng Thái: 
+      if blogCategory.status === 'active'
+        span(class="badge badge-success") Hoạt Động
+      else
+        span(class="badge badge-danger") Dừng Hoạt Động
+
+  if blogCategory.position
+    div(class="mb-4") Vị Trí: <b>#{blogCategory.position}</b>
+
+  if blogCategory.description
+    div(class="mb-4") Mô Tả: !{blogCategory.description}
+
+  a(
+    href=`${prefixAdmin}/blogs-category/edit/${blogCategory.id}`
+    class="btn btn-warning"
+  ) Chỉnh Sửa

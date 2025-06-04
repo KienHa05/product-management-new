@@ -195,3 +195,27 @@ module.exports.changeStatus = async (req, res) => {
   }
   res.redirect(req.get("Referrer") || "/");
 };
+
+// [GET] /admin/blogs-category/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      _id: req.params.id,
+      deleted: false
+    };
+
+    const blogCategory = await BlogCategory.findOne(find);
+
+    if (!blogCategory) {
+      return res.redirect(`${systemConfig.prefixAdmin}/blogs-category`);
+    }
+
+    res.render("admin/pages/blogs-category/detail", {
+      pageTitle: blogCategory.title,
+      blogCategory: blogCategory,
+    });
+
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/blogs-category`);
+  }
+};
