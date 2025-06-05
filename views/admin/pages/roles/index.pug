@@ -24,6 +24,7 @@ block main
               th STT
               th Nhóm Quyền
               th Mô Tả Ngắn
+              th Tổng Số Quyền
               th Hành Động
           tbody
             if records.length > 0
@@ -32,6 +33,7 @@ block main
                   td #{index + 1}
                   td #{item.title}
                   td #{item.description}
+                  td #{item.permissions.length}
                   td
                     a(
                       class="btn btn-info btn-sm m-1"

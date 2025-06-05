@@ -2,6 +2,8 @@ const Role = require("../../models/role.model");
 
 const systemConfig = require("../../config/system");
 
+const permissionMap = require("../../constants/permissionMap");
+
 // [GET] /admin/roles
 module.exports.index = async (req, res) => {
   let find = {
@@ -92,4 +94,24 @@ module.exports.permissionsPatch = async (req, res) => {
 
   req.flash("success", "Cập Nhật Phân Quyền Thành Công!");
   res.redirect("back");
+};
+
+// [GET] /admin/roles/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id
+    };
+
+    const role = await Role.findOne(find);
+
+    res.render("admin/pages/roles/detail", {
+      pageTitle: role.title,
+      role: role,
+      permissionMap: permissionMap
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/roles`);
+  }
 };

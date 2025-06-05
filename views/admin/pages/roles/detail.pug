@@ -1,0 +1,28 @@
+extends ../../layouts/default.pug
+
+block main
+  .container
+    .card.shadow.mb-4
+      .card-header.d-flex.justify-content-between.align-items-center
+        h3.mb-0 #{role.title}
+        a.btn.btn-warning(href=`${prefixAdmin}/roles/edit/${role._id}`) Chỉnh Sửa
+
+      .card-body
+        if role.description
+          p
+            strong Mô tả:
+            |  #{role.description}
+
+        if role.permissions
+          p
+            strong Tổng số quyền:
+            |  #{role.permissions.length}
+
+        if role.permissions.length > 0
+          h5.mt-4.mb-2 Danh Sách Quyền
+          ul.list-group
+            each permission in role.permissions
+              li.list-group-item
+                i.fas.fa-check-circle.text-success.me-2
+                | #{permissionMap[permission] || permission}
+
