@@ -3,6 +3,11 @@ const mongoose = require('mongoose');
 const roleSchema = new mongoose.Schema(
   {
     title: String,
+    roleType: {
+      type: String,
+      enum: ["admin", "content_manager"],
+      default: "content_manager"
+    },
     description: String,
     permissions: {
       type: Array,

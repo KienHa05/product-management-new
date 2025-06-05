@@ -1,7 +1,12 @@
 extends ../../layouts/default.pug
 
+include ../../mixins/alert.pug
+
 block main
   if role.permissions.includes("roles_view")
+    +alert-success(5000)
+    +alert-error(5000)
+
     h1(class="mb-4") Nhóm Quyền
 
     .card.mb-3
@@ -44,10 +49,19 @@ block main
                         class="btn btn-warning btn-sm m-1"
                         href=`${prefixAdmin}/roles/edit/${item.id}`
                       ) Sửa
-                    if role.permissions.includes("roles_delete")  
+                    if role.permissions.includes("roles_delete") && item.roleType !== 'admin'
                       button(
                         class=`btn btn-danger btn-sm m-1`
+                        button-delete
+                        data-id=item.id
                       ) Xóa
-            else
-              tr
-                td(colspan="4" class="text-center") Chưa Có Nhóm Quyền Nào Được Tạo.
+                      
+    form(
+      action=""
+      method="POST"
+      id="form-delete-item"
+      data-path=`${prefixAdmin}/roles/delete`
+    )
+
+    script(src="/admin/js/roles.js") 
+
