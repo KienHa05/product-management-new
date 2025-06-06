@@ -11,18 +11,46 @@ module.exports.index = async (req, res) => {
     deleted: false
   };
 
+  const user = res.locals.user;
+
+  if (!user) {
+    return res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  }
+
+  // Đảm bảo luôn có user.role
+  const currentRole = await Role.findOne({
+    _id: user.role_id,
+    deleted: false,
+  });
+
+  // Nếu role không tìm thấy thì gán mặc định
+  user.role = currentRole || { title: "Không phân quyền", permissions: [], roleType: "" };
+
   const records = await Account.find(find).select("-password -token");
+
   for (const record of records) {
     const role = await Role.findOne({
       _id: record.role_id,
       deleted: false,
     });
-    record.role = role;
+
+    record.role = role || { title: "Không phân quyền", roleType: "" };
+
+    const isSelf = (record.id === user.id);
+    const recordIsAdmin = (record.role.roleType === "admin");
+    const currentUserIsAdmin = (user.role.roleType === "admin");
+
+    // Chỉ admin mới được thao tác người khác, không phải chính mình, không phải admin
+    record.canModify = currentUserIsAdmin && !isSelf && !recordIsAdmin;
+
+    // Người thường chỉ được sửa chính mình, admin thì không được sửa chính mình
+    record.canSelfEdit = isSelf && !currentUserIsAdmin;
   }
 
   res.render("admin/pages/accounts/index", {
     pageTitle: "Danh Sách Tài Khoản",
     records: records,
+    role: user.role,
   });
 }
 
@@ -55,6 +83,8 @@ module.exports.createPost = async (req, res) => {
 
     const record = new Account(req.body);
     await record.save();
+
+    req.flash("success", `Thêm Mới Tài Khoản Thành Công!`);
 
     res.redirect(`${systemConfig.prefixAdmin}/accounts`);
   }
@@ -128,4 +158,25 @@ module.exports.changeStatus = async (req, res) => {
   res.redirect("back");
 }
 
+// [DELETE] /admin/accounts/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await Account.updateOne(
+      { _id: id },
+      {
+        deleted: true,
+        deletedAt: new Date()
+      }
+    );
+
+    req.flash("success", "Đã Xóa Thành Công Tài Khoản Này!");
+  } catch (error) {
+    console.error(error);
+    req.flash("error", "Đã Xảy Ra Lỗi Khi Xóa Tài Khoản!");
+  }
+
+  res.redirect("back");
+};
 

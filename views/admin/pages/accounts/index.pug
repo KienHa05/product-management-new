@@ -46,38 +46,43 @@ block main
                       height="auto"
                     )
                   td #{item.fullName}
-                  td #{item.role.title}
+                  td 
+                    if item.role && item.role.title
+                      | #{item.role.title}
                   td #{item.email}
                   td
-                    if item.status === "active"
-                      a(
-                        href=`javascript:;`
-                        data-id=item.id
-                        data-status=item.status
-                        button-change-status
-                        class=`badge badge-success`
-                      ) Hoạt Động
-                    else 
-                      a(
-                        href=`javascript:;`
-                        data-id=item.id
-                        data-status=item.status
-                        button-change-status
-                        class=`badge badge-danger`
-                      ) Dừng Hoạt Động
+                    if role.permissions.includes("accounts_edit") && item.canModify
+                      if item.status === "active"
+                        a(
+                          href=`javascript:;`
+                          data-id=item.id
+                          data-status=item.status
+                          button-change-status
+                          class=`badge badge-success`
+                        ) Hoạt Động
+                      else 
+                        a(
+                          href=`javascript:;`
+                          data-id=item.id
+                          data-status=item.status
+                          button-change-status
+                          class=`badge badge-danger`
+                        ) Dừng Hoạt Động
                   td
                     a(
                       class=`btn btn-info btn-sm m-1`
                       href=`${prefixAdmin}/accounts/detail/${item.id}`
                     ) Chi Tiết
-                    if role.permissions.includes("accounts_edit")
+                    if role.permissions.includes("accounts_edit") && (item.canModify || item.canSelfEdit)
                       a(
                         class=`btn btn-warning btn-sm m-1`
                         href=`${prefixAdmin}/accounts/edit/${item.id}`
                       ) Sửa
-                    if role.permissions.includes("accounts_delete")  
+                    if role.permissions.includes("accounts_delete") && item.canModify
                       button(
                         class="btn btn-danger btn-sm m-1"
+                        button-delete
+                        data-id=item.id
                       ) Xóa
 
     form(
