@@ -180,3 +180,22 @@ module.exports.deleteItem = async (req, res) => {
   res.redirect("back");
 };
 
+// [GET] /admin/accounts/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id
+    };
+
+    const account = await Account.findOne(find).select("-password -token");
+
+    res.render("admin/pages/accounts/detail", {
+      pageTitle: account.title,
+      account: account,
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  }
+};
+

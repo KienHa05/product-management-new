@@ -1,0 +1,41 @@
+extends ../../layouts/default.pug
+
+block main
+  .container.mt-4
+    .card.shadow
+      .card-header.bg-primary.text-white
+        h4.mb-0 Thông Tin Chi Tiết Tài Khoản
+
+      .card-body
+        .row.mb-3
+          .col-sm-3.font-weight-bold Họ Tên:
+          .col-sm-9 #{account.fullName}
+
+        .row.mb-3
+          .col-sm-3.font-weight-bold Avatar:
+          .col-sm-9
+            if account.avatar
+              img(src=account.avatar, class="img-thumbnail", style="max-width: 120px;")
+            else
+              span.text-muted Không có ảnh
+
+        .row.mb-3
+          .col-sm-3.font-weight-bold Email:
+          .col-sm-9 #{account.email}
+
+        .row.mb-3
+          .col-sm-3.font-weight-bold Số Điện Thoại:
+          .col-sm-9 #{account.phone}
+
+        .row.mb-3
+          .col-sm-3.font-weight-bold Trạng Thái:
+          .col-sm-9
+            if account.status === 'active'
+              span.badge.badge-success Hoạt Động
+            else
+              span.badge.badge-danger Dừng Hoạt Động
+
+      .card-footer.text-right
+        a.btn.btn-warning(href=`${prefixAdmin}/accounts/edit/${account.id}`)
+          i.fas.fa-edit.mr-1
+          | Chỉnh Sửa
