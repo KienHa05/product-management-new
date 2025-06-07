@@ -36,7 +36,7 @@ block main
             .col-8
               if role.permissions.includes("products_edit")
                 +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
-            .col-4
+            .col-4(class=`mb-3`)
               if role.permissions.includes("products_create")
                 a(
                   href=`${prefixAdmin}/products/create`

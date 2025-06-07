@@ -77,22 +77,23 @@ block main
                       name="position"
                     )
                   td
-                    if item.status == "active"
-                      a( 
-                        href="javascript:;"
-                        data-status=item.status
-                        data-id=item.id
-                        button-change-status
-                        class="badge badge-success"
-                      ) Hoạt Động
-                    else
-                      a( 
-                        href="javascript:;"
-                        data-status=item.status
-                        data-id=item.id
-                        button-change-status
-                        class="badge badge-danger"
-                      ) Dừng Hoạt Động
+                    if role.permissions.includes("blogs-category_edit")
+                      if item.status == "active"
+                        a( 
+                          href="javascript:;"
+                          data-status=item.status
+                          data-id=item.id
+                          button-change-status
+                          class="badge badge-success"
+                        ) Hoạt Động
+                      else
+                        a( 
+                          href="javascript:;"
+                          data-status=item.status
+                          data-id=item.id
+                          button-change-status
+                          class="badge badge-danger"
+                        ) Dừng Hoạt Động
                   td
                       if item.createdBy && item.createdBy.accountFullName
                         p.text-center #{item.createdBy.accountFullName} 
@@ -118,11 +119,12 @@ block main
                         class="btn btn-warning btn-sm m-1"
                         href=`${prefixAdmin}/blogs-category/edit/${item.id}`
                       ) Sửa
-                    button(
-                      class="btn btn-danger btn-sm m-1 m-1"
-                      button-delete
-                      data-id=item.id
-                    ) Xóa
+                    if role.permissions.includes("blogs-category_delete")
+                      button(
+                        class="btn btn-danger btn-sm m-1 m-1"
+                        button-delete
+                        data-id=item.id
+                      ) Xóa
 
     form(
       action=""

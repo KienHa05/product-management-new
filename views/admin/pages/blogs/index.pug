@@ -7,7 +7,7 @@ include ../../mixins/moment.pug
 
 
 block main
-  if role.permissions.includes("products_view")
+  if role.permissions.includes("blogs_view")
     +alert-success(5000)
 
     h1 Danh Sách Blog
@@ -35,10 +35,11 @@ block main
             .col-8
               
             .col-4
-              a(
-                href=`${prefixAdmin}/blogs/create`
-                class="btn btn-outline-primary mb-3"
-              ) + Thêm Mới
+              if role.permissions.includes("blogs_create")
+                a(
+                  href=`${prefixAdmin}/blogs/create`
+                  class="btn btn-outline-primary mb-3"
+                ) + Thêm Mới
 
           table.table.table-hover.table-sm
             thead
@@ -83,22 +84,23 @@ block main
                       name="position"
                     )
                   td
-                    if item.status == "published"
-                      a( 
-                        href="javascript:;"
-                        data-status=item.status
-                        data-id=item.id
-                        button-change-status
-                        class="badge badge-success"
-                      ) Công Khai
-                    else
-                      a( 
-                        href="javascript:;"
-                        data-status=item.status
-                        data-id=item.id
-                        button-change-status
-                        class="badge badge-warning"
-                      ) Bản Nháp
+                    if role.permissions.includes("blogs_edit")
+                      if item.status == "published"
+                        a( 
+                          href="javascript:;"
+                          data-status=item.status
+                          data-id=item.id
+                          button-change-status
+                          class="badge badge-success"
+                        ) Công Khai
+                      else
+                        a( 
+                          href="javascript:;"
+                          data-status=item.status
+                          data-id=item.id
+                          button-change-status
+                          class="badge badge-warning"
+                        ) Bản Nháp
                   td
                     if item.createdBy && item.createdBy.accountFullName
                       p.text-center #{item.createdBy.accountFullName} 
