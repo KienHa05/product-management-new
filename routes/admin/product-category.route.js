@@ -9,32 +9,45 @@ const validate = require('../../validates/admin/product-category.validate');
 
 const uploadCloud = require('../../middlewares/admin/uploadCloud.middleware');
 
-router.get('/', controller.index);
+const { requirePermission } = require('../../middlewares/admin/permission.middleware');
 
-router.get('/create', controller.create);
+
+router.get('/', requirePermission("products-category_view"), controller.index);
+
+router.get('/create', requirePermission("products-category_create"), controller.create);
 
 router.post(
   '/create',
+  requirePermission("products-category_create"),
   upload.single('thumbnail'),
   uploadCloud.upload,
   validate.createPost,
   controller.createPost
 );
 
-router.get('/edit/:id', controller.edit);
+router.get('/edit/:id', requirePermission("products-category_edit"), controller.edit);
 
 router.patch(
   '/edit/:id',
+  requirePermission("products-category_edit"),
   upload.single('thumbnail'),
   uploadCloud.upload,
   validate.createPost,
   controller.editPatch
 );
 
-router.delete('/delete/:id', controller.deleteItem);
+router.delete(
+  '/delete/:id',
+  requirePermission("products-category_delete"),
+  controller.deleteItem
+);
 
-router.get('/detail/:id', controller.detail);
+router.get('/detail/:id', requirePermission("products-category_view"), controller.detail);
 
-router.patch('/change-status/:status/:id', controller.changeStatus);
+router.patch(
+  '/change-status/:status/:id',
+  requirePermission("products-category_edit"),
+  controller.changeStatus
+);
 
 module.exports = router;

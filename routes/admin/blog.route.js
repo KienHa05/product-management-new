@@ -9,33 +9,40 @@ const validate = require("../../validates/admin/blog.validate");
 
 const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
 
+const { requirePermission } = require('../../middlewares/admin/permission.middleware');
 
-router.get('/', controller.index);
+router.get('/', requirePermission("blogs_view"), controller.index);
 
-router.patch('/change-status/:status/:id', controller.changeStatus);
+router.patch(
+  '/change-status/:status/:id',
+  requirePermission("blogs_edit"),
+  controller.changeStatus
+);
 
-router.delete('/delete/:id', controller.deleteItem);
+router.delete('/delete/:id', requirePermission("blogs_delete"), controller.deleteItem);
 
-router.get('/create', controller.create);
+router.get('/create', requirePermission("blogs_create"), controller.create);
 
 router.post(
   '/create',
+  requirePermission("blogs_create"),
   upload.single('thumbnail'),
   uploadCloud.upload,
   validate.createPost,
   controller.createPost
 );
 
-router.get("/edit/:id", controller.edit);
+router.get("/edit/:id", requirePermission("blogs_edit"), controller.edit);
 
 router.patch(
   "/edit/:id",
+  requirePermission("blogs_edit"),
   upload.single('thumbnail'),
   uploadCloud.upload,
-  validate.createPost, // Dùng chung bên tạo sản phẩm vì logic giống nhau
+  validate.createPost, // Dùng chung validate với create
   controller.editPatch
 );
 
-router.get("/detail/:id", controller.detail);
+router.get("/detail/:id", requirePermission("blogs_view"), controller.detail);
 
 module.exports = router;
