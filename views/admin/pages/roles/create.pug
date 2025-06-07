@@ -15,8 +15,21 @@ block main
           class="form-control"
           id="title"
           name="title"
+          placeholder="Ví dụ : Admin, Product Manager, Blog Manager,..."
           required
         )
+      
+      div(class="form-group")
+        label(for="roleType") Loại Vai Trò
+        input(
+          type="text"
+          class="form-control"
+          id="roleType"
+          name="roleType"
+          placeholder="Ví dụ : admin, product_manager, blog_manager,..."
+          required
+        )
+      
       div(class="form-group")
         label(for="desc") Mô Tả
         input(

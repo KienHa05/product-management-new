@@ -4,24 +4,29 @@ block main
   .container
     .card.shadow.mb-4
       .card-header.d-flex.justify-content-between.align-items-center
-        h3.mb-0 #{role.title}
-        a.btn.btn-warning(href=`${prefixAdmin}/roles/edit/${role._id}`) Chỉnh Sửa
+        h3.mb-0 #{roleDetail.title}
+        a.btn.btn-warning(href=`${prefixAdmin}/roles/edit/${roleDetail._id}`) Chỉnh Sửa
 
       .card-body
-        if role.description
+        if roleDetail.roleType
+          p
+            strong Loại Vai Trò:
+            |  #{roleDetail.roleType}
+
+        if roleDetail.description
           p
             strong Mô tả:
-            |  #{role.description}
+            |  #{roleDetail.description}
 
-        if role.permissions
+        if roleDetail.permissions
           p
             strong Tổng số quyền:
-            |  #{role.permissions.length}
+            |  #{roleDetail.permissions.length}
 
-        if role.permissions.length > 0
+        if roleDetail.permissions.length > 0
           h5.mt-4.mb-2 Danh Sách Quyền
           ul.list-group
-            each permission in role.permissions
+            each permission in roleDetail.permissions
               li.list-group-item
                 i.fas.fa-check-circle.text-success.me-2
                 | #{permissionMap[permission] || permission}

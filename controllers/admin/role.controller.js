@@ -104,11 +104,11 @@ module.exports.detail = async (req, res) => {
       _id: req.params.id
     };
 
-    const role = await Role.findOne(find);
+    const roleDetail = await Role.findOne(find);
 
     res.render("admin/pages/roles/detail", {
-      pageTitle: role.title,
-      role: role,
+      pageTitle: roleDetail.title,
+      roleDetail: roleDetail,
       permissionMap: permissionMap
     });
   } catch (error) {

@@ -5,8 +5,7 @@ const roleSchema = new mongoose.Schema(
     title: String,
     roleType: {
       type: String,
-      enum: ["admin", "content_manager"],
-      default: "content_manager"
+      required: true
     },
     description: String,
     permissions: {

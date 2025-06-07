@@ -3,7 +3,7 @@ extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 
 block main
-  if role.permissions.includes("accounts_view")
+  if viewerRole.permissions.includes("accounts_view")
     +alert-error(5000)
     +alert-success(5000)
 
@@ -15,7 +15,7 @@ block main
         .row
           .col-8
           .col-4.text-right
-            if role.permissions.includes("accounts_create")
+            if viewerRole.permissions.includes("accounts_create")
               a(
                   href=`${prefixAdmin}/accounts/create`
                   class=`btn btn-outline-primary mb-3`
@@ -51,7 +51,7 @@ block main
                       | #{item.role.title}
                   td #{item.email}
                   td
-                    if role.permissions.includes("accounts_edit") && item.canModify
+                    if viewerRole.permissions.includes("accounts_edit") && item.canModify
                       if item.status === "active"
                         a(
                           href=`javascript:;`
@@ -73,12 +73,12 @@ block main
                       class=`btn btn-info btn-sm m-1`
                       href=`${prefixAdmin}/accounts/detail/${item.id}`
                     ) Chi Tiết
-                    if role.permissions.includes("accounts_edit") && (item.canModify || item.canSelfEdit)
+                    if viewerRole.permissions.includes("accounts_edit") && (item.canModify || item.canSelfEdit)
                       a(
                         class=`btn btn-warning btn-sm m-1`
                         href=`${prefixAdmin}/accounts/edit/${item.id}`
                       ) Sửa
-                    if role.permissions.includes("accounts_delete") && item.canModify
+                    if viewerRole.permissions.includes("accounts_delete") && item.canModify
                       button(
                         class="btn btn-danger btn-sm m-1"
                         button-delete

@@ -50,7 +50,7 @@ module.exports.index = async (req, res) => {
   res.render("admin/pages/accounts/index", {
     pageTitle: "Danh Sách Tài Khoản",
     records: records,
-    role: user.role,
+    viewerRole: user.role,
   });
 }
 
