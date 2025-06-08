@@ -1,0 +1,46 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/moment.pug
+
+block main
+  .blog-detail
+    .container.my-5
+      .row
+        .col-6
+          .inner-thumb
+            if blog.thumbnail
+              img(src=blog.thumbnail, alt=blog.title)
+        .col-6
+          h1.inner-title #{blog.title}
+
+          if blog.category
+            div.inner-category
+              span Chuyên Mục: 
+                | #{blog.category.title}
+
+          if blog.author
+            div.inner-author
+              span Tác Giả: 
+              b #{blog.author}
+
+          if blog.publishedAt
+            div.inner-date
+              span Ngày Đăng: 
+              b
+                +formatDate(blog.publishedAt)
+
+    hr
+
+    .container.my-5
+      .row
+        .col-12
+          +box-head("Tóm tắt bài viết")
+          .inner-desc
+            p #{blog.summary}
+
+    .container.my-5
+      .row
+        .col-12
+          +box-head("Nội dung chi tiết")
+          .inner-content.
+            !{blog.content}

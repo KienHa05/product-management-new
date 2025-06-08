@@ -5,4 +5,6 @@ const controller = require("../../controllers/client/blog.controller");
 
 router.get('/', controller.index);
 
+router.get('/detail/:slugBlog', controller.detail);
+
 module.exports = router;
