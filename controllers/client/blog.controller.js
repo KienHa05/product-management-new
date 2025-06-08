@@ -14,9 +14,16 @@ module.exports.index = async (req, res) => {
 
   const blogs = await Blog.find(find).sort(sort);
 
+  const blogsCategory = await BlogCategory.find({
+    deleted: false,
+    status: "active"
+  });
+
   res.render("client/pages/blogs/index", {
     pageTitle: "Tổng Hợp Bài Viết",
-    blogs: blogs
+    blogs: blogs,
+    blogsCategory: blogsCategory,
+    currentCategory: ""    // mặc định là “Tất cả”
   });
 };
 
@@ -48,5 +55,42 @@ module.exports.detail = async (req, res) => {
   } catch (error) {
     console.error(`Có Lỗi Bên Chi Tiết Bài Viết Client: ${error}`);
     res.redirect(`/blogs`);
+  }
+};
+
+// [GET] /blogs/:slugCategory
+module.exports.category = async (req, res) => {
+  try {
+    const slug = req.params.slugCategory;
+
+    // Lấy danh sách category để dropdown
+    const blogsCategory = await BlogCategory.find({
+      deleted: false,
+      status: "active"
+    });
+
+    // Tìm category hiện tại theo slug
+    const category = blogsCategory.find(c => c.slug === slug);
+    if (!category) return res.redirect("/blogs");
+
+    // Lọc blogs theo category
+    const blogs = await Blog.find({
+      blog_category_id: category._id,
+      deleted: false,
+      status: "published"
+    }).sort({ position: "desc" });
+
+    console.log(slug);
+
+
+    res.render("client/pages/blogs/index", {
+      pageTitle: category.title,
+      blogs: blogs,
+      blogsCategory: blogsCategory,
+      currentCategory: slug
+    });
+  } catch (error) {
+    console.error(error);
+    res.redirect(req.get("Referrer") || "/blogs");
   }
 };

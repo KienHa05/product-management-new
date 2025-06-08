@@ -1,6 +1,7 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 include ../../mixins/alert.pug
+include ../../mixins/moment.pug
 
 block main 
   +alert-success(5000)
@@ -12,17 +13,46 @@ block main
         +box-head("Tin Tức & Bài Viết")  
 
     .row
-      each blog in blogs
-        .col-md-4.col-sm-6.mb-4
-          .card.shadow-sm.border-0
-            if blog.thumbnail
-              a(href=`/blogs/detail/${blog.slug}`)
-                img.card-img-top(src=blog.thumbnail, alt=blog.title)
-            .card-body
-              h5.card-title
-                a.text-dark(href=`/blogs/detail/${blog.slug}`) #{blog.title}
-              p.card-text.text-muted.small
-                | Tác giả: #{blog.author && blog.author ? blog.author : 'Không rõ'} | 
-                | Ngày đăng: #{blog.publishedAt ? blog.publishedAt.toLocaleDateString('vi-VN') : ''}
-              p.card-text #{blog.summary}
-              a.btn.btn-sm.btn-outline-primary(href=`/blogs/detail/${blog.slug}`) Xem thêm
+      .col-5
+        .d-flex.align-items-center.mb-4(filterBlog)
+          h6 #{currentCategory}
+          select(
+            class="form-control"
+            filter-blog-select
+          )
+            option(value="" selected) Tổng Hợp Danh Mục
+            each blogCategory in blogsCategory
+              option(
+                value=blogCategory.slug
+                selected=(blogCategory.slug === currentCategory)
+              ) #{blogCategory.title}
+
+          button(
+            class="btn btn-danger ml-2"
+            filter-clear
+          ) Clear
+
+    if blogs.length === 0
+      .row
+        .col-12
+          h6.text-center
+            | Không tìm thấy bài viết nào.
+    else
+      .row
+        each blog in blogs
+          .col-md-4.col-sm-6.mb-4
+            .card.shadow-sm.border-0
+              if blog.thumbnail
+                a(href=`/blogs/detail/${blog.slug}`)
+                  img.card-img-top(src=blog.thumbnail, alt=blog.title)
+              .card-body
+                h5.card-title
+                  a.text-dark(href=`/blogs/detail/${blog.slug}`) #{blog.title}
+                p.card-text.text-muted.small
+                  | Tác giả: #{blog.author && blog.author ? blog.author : 'Không rõ'} | 
+                  | Ngày đăng: 
+                  +formatDate(blog.publishedAt)
+                p.card-text #{blog.summary}
+                a.btn.btn-sm.btn-outline-primary(href=`/blogs/detail/${blog.slug}`) Xem thêm
+
+  script(src="/js/blog.js") 
