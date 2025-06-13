@@ -80,8 +80,6 @@ module.exports.category = async (req, res) => {
       status: "published"
     }).sort({ position: "desc" });
 
-    console.log(slug);
-
 
     res.render("client/pages/blogs/index", {
       pageTitle: category.title,
