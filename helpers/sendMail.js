@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-module.exports.sendMail = (email, subject, html) => {
+module.exports.sendMail = (email, subject, html, attachments = []) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -16,12 +16,15 @@ module.exports.sendMail = (email, subject, html) => {
     html: html
   };
 
+  if (attachments.length) {
+    mailOptions.attachments = attachments;
+  }
+
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log(error);
+      console.log("SendMail Error:", error);
     } else {
       console.log('Email sent: ' + info.response);
-      //
     }
   });
 };
