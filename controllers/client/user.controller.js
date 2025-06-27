@@ -154,37 +154,42 @@ module.exports.forgotPassword = async (req, res) => {
 
 // [POST] /user/password/forgot
 module.exports.forgotPasswordPost = async (req, res) => {
-  const email = req.body.email;
+  try {
+    const email = req.body.email;
 
-  const user = await User.findOne({
-    email: email,
-    deleted: false
-  });
+    const user = await User.findOne({
+      email: email,
+      deleted: false
+    });
 
-  if (!user) {
-    req.flash("error", "Email Không Tồn Tại!");
-    res.redirect("back");
-    return;
+    if (!user) {
+      req.flash("error", "Email Không Tồn Tại!");
+      res.redirect("back");
+      return;
+    }
+
+    // Lưu Thông Tin Vào DB
+    const otp = generateHelper.generateRandomNumber(8);
+
+    const objectForgotPassword = {
+      email: email,
+      otp: otp,
+      expireAt: Date.now()
+    };
+
+    const forgotPassword = new ForgotPassword(objectForgotPassword);
+    await forgotPassword.save();
+
+    // Nếu tồn tại email thì gửi mã OTP qua email
+    const { subject, html } = otpService(otp);
+
+    await sendMailHelper.sendMail(email, subject, html);
+
+    res.redirect(`/user/password/otp?email=${email}`);
+  } catch (error) {
+    req.flash("error", `Lỗi quên mật khẩu OTP : ${error}`);
+    res.redirect("/user/password");
   }
-
-  // Lưu Thông Tin Vào DB
-  const otp = generateHelper.generateRandomNumber(8);
-
-  const objectForgotPassword = {
-    email: email,
-    otp: otp,
-    expireAt: Date.now()
-  };
-
-  const forgotPassword = new ForgotPassword(objectForgotPassword);
-  await forgotPassword.save();
-
-  // Nếu tồn tại email thì gửi mã OTP qua email
-  const { subject, html } = otpService(otp);
-
-  sendMailHelper.sendMail(email, subject, html);
-
-  res.redirect(`/user/password/otp?email=${email}`);
 };
 
 // [GET] /user/password/otp

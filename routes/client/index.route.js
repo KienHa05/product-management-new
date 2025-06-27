@@ -14,6 +14,7 @@ const chatRoutes = require("./chat.route");
 const usersRoutes = require("./users.route");
 const roomsChatRoutes = require("./rooms-chat.route");
 const blogsRoutes = require("./blog.route");
+const contactRoutes = require("./contact.route");
 
 
 module.exports = (app) => {
@@ -41,4 +42,6 @@ module.exports = (app) => {
   app.use("/rooms-chat", authMiddleware.requireAuth, roomsChatRoutes);
 
   app.use("/blogs", blogsRoutes);
+
+  app.use("/contact", contactRoutes);
 }

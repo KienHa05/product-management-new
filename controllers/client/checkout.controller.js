@@ -44,66 +44,72 @@ module.exports.index = async (req, res) => {
 
 // [POST] /checkout/order
 module.exports.order = async (req, res) => {
-  const cartId = req.cookies.cartId;
-  const userInfo = req.body;
+  try {
+    const cartId = req.cookies.cartId;
+    const userInfo = req.body;
 
-  const cart = await Cart.findOne({ _id: cartId });
+    const cart = await Cart.findOne({ _id: cartId });
 
-  const products = [];
+    const products = [];
 
-  for (const cartItem of cart.products) {
-    const productDoc = await Product.findOne({
-      _id: cartItem.product_id,
-    }).select("title thumbnail price discountPercentage");
+    for (const cartItem of cart.products) {
+      const productDoc = await Product.findOne({
+        _id: cartItem.product_id,
+      }).select("title thumbnail price discountPercentage");
 
-    const productData = {
-      product_id: cartItem.product_id,
-      price: productDoc.price,
-      discountPercentage: productDoc.discountPercentage,
-      quantity: cartItem.quantity,
-      productInfo: {
-        title: productDoc.title,
-        thumbnail: productDoc.thumbnail
-      }
+      const productData = {
+        product_id: cartItem.product_id,
+        price: productDoc.price,
+        discountPercentage: productDoc.discountPercentage,
+        quantity: cartItem.quantity,
+        productInfo: {
+          title: productDoc.title,
+          thumbnail: productDoc.thumbnail
+        }
+      };
+
+      products.push(productData);
+    }
+
+    const orderInfo = {
+      cart_id: cartId,
+      userInfo: userInfo,
+      products: products
     };
 
-    products.push(productData);
+    const order = new Order(orderInfo);
+    await order.save();
+
+    const { subject, html } = orderService(products, userInfo, order);
+
+    await sendMailHelper.sendMail(
+      userInfo.email,
+      subject,
+      html,
+      [
+        {
+          filename: "logo.png",
+          path: logoPath, // đường dẫn ảnh
+          cid: "shopLogo"  // trùng với src="cid:shopLogo" để nó gắn link sang bên src
+        }
+      ]
+    );
+
+    // Reset lại thông tin giỏ hàng khi đặt hàng xong
+    await Cart.updateOne(
+      {
+        _id: cartId,
+      },
+      {
+        products: []
+      });
+
+    res.redirect(`/checkout/success/${order.id}`);
+  } catch (error) {
+    req.flash("error", `Lỗi đặt hàng : ${error}`);
+    res.redirect("/checkout");
   }
 
-  const orderInfo = {
-    cart_id: cartId,
-    userInfo: userInfo,
-    products: products
-  };
-
-  const order = new Order(orderInfo);
-  await order.save();
-
-  const { subject, html } = orderService(products, userInfo, order);
-
-  sendMailHelper.sendMail(
-    userInfo.email,
-    subject,
-    html,
-    [
-      {
-        filename: "logo.png",
-        path: logoPath, // đường dẫn ảnh
-        cid: "shopLogo"  // trùng với src="cid:shopLogo" để nó gắn link sang bên src
-      }
-    ]
-  );
-
-  // Reset lại thông tin giỏ hàng khi đặt hàng xong
-  await Cart.updateOne(
-    {
-      _id: cartId,
-    },
-    {
-      products: []
-    });
-
-  res.redirect(`/checkout/success/${order.id}`);
 }
 
 // [GET] /checkout/success/:orderId

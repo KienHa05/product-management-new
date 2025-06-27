@@ -1,0 +1,50 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success(5000)
+
+  .container.contact-page.mt-5.mb-5
+    h1.text-center.mb-4 Cảm Ơn Bạn Đã Liên Hệ!
+
+    .row.d-flex.align-items-stretch
+      //- Bên trái: Thông điệp cảm ơn
+      .col-lg-6.contact-left.mb-4.d-flex.align-items-center
+        .border.rounded.p-4.bg-light.w-100
+          h4.text-success.text-center.mb-3 🎉 Chúng tôi đã nhận được liên hệ của bạn!
+          p.text-center Chúng tôi sẽ phản hồi bạn trong thời gian sớm nhất thông qua email hoặc số điện thoại bạn đã cung cấp.
+          .text-center.mt-4
+            a.btn.btn-primary(href="/") Quay về trang chủ
+
+      //- Bên phải: Thông tin liên hệ (giữ nguyên như contact)
+      .col-lg-6.contact-right.d-flex.flex-column.justify-content-between
+        .info-contact.border.rounded.p-4.bg-light.mb-3
+          h5.mb-3 Thông Tin Liên Hệ
+          ul.list-unstyled
+            li.mb-2
+              strong Số điện thoại:
+              |  0123 456 789
+            li.mb-2
+              strong Email:
+              |  test@gmail.com
+            li.mb-2
+              strong Số Fax:
+              |  (024) 1234 5678
+            li.mb-2
+              strong Mã số thuế:
+              |  0101234567
+            li.mb-2
+              strong Mã số doanh nghiệp:
+              |  0312345678 do Sở KHĐT TP.HCM cấp
+            li.mb-2
+              strong Giấy phép kinh doanh:
+              |  Số 123/GP-BKHN cấp ngày 01/01/2024
+
+        .map-wrapper.border.rounded.overflow-hidden(style="height: 100%; flex: 1;")
+          iframe(src="https://www.google.com/maps/embed?pb=!1m23!1m12!1m3!1d3723.863806019066!2d105.74468687471467!3d21.038134787457583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m8!3e3!4m0!4m5!1s0x313455e940879933%3A0xcf10b34e9f1a03df!2zMlBRVys2SkogVHLGsOG7nW5nIENhbyDEkeG6s25nIEZQVCBQb2x5dGVjaG5pYywgVMOyYSBuaMOgIEZQVCBQb2x5dGVjaG5pYy4sIEPhu5VuZyBz4buRIDIsIDEzIFAuIFRy4buLbmggVsSDbiBCw7QsIFh1w6JuIFBoxrDGoW5nLCBOYW0gVOG7qyBMacOqbSwgSMOgIE7hu5lpIDEwMDAwMCwgVmnhu4d0IE5hbQ!3m2!1d21.0381298!2d105.74726179999999!5e0!3m2!1svi!2s!4v1751011310895!5m2!1svi!2s" 
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade")
