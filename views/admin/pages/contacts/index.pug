@@ -5,6 +5,7 @@ include ../../mixins/moment.pug
 block main
   if role.permissions.includes("contacts_view")
     +alert-success(5000)
+    +alert-error(5000)
 
     h1 Danh Sách Liên Hệ
 
