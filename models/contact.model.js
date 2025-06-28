@@ -26,7 +26,16 @@ const contactSchema = new mongoose.Schema(
     question: {
       type: String,
       required: true,
-    }
+    },
+    status: {
+      type: String,
+      enum: ["pending", "resolved"],
+      default: 'pending'
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
