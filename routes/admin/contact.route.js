@@ -8,4 +8,10 @@ const { requirePermission } = require('../../middlewares/admin/permission.middle
 
 router.get('/', requirePermission("contacts_view"), controller.index);
 
+router.patch(
+  '/change-status/:status/:id',
+  requirePermission("contacts_edit"),
+  controller.changeStatus
+);
+
 module.exports = router;
