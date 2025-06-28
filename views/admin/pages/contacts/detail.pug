@@ -1,0 +1,56 @@
+extends ../../layouts/default.pug
+include ../../mixins/moment.pug
+
+block main
+  .container.mt-4
+    .card.shadow-sm
+      .card-header.bg-primary.text-white.text-center
+        h4.mb-0 Chi Tiết Liên Hệ
+
+      .card-body
+        .row.mb-3
+          .col-sm-3.font-weight-bold Trạng Thái:
+          .col-sm-9
+            if contact.status === 'resolved'
+              span.badge.badge-success Đã Xử Lý
+            else
+              span.badge.badge-warning Chờ Xử Lý
+
+        if contact.fullName
+          .row.mb-3
+            .col-sm-3.font-weight-bold Họ Tên:
+            .col-sm-9 #{contact.fullName}
+
+        if contact.email
+          .row.mb-3
+            .col-sm-3.font-weight-bold Email:
+            .col-sm-9 #{contact.email}
+
+        if contact.phone
+          .row.mb-3
+            .col-sm-3.font-weight-bold Số Điện Thoại:
+            .col-sm-9 #{contact.phone}
+
+        if contact.company
+          .row.mb-3
+            .col-sm-3.font-weight-bold Tên Công Ty:
+            .col-sm-9 #{contact.company}
+
+        if contact.subject
+          .row.mb-3
+            .col-sm-3.font-weight-bold Chủ Đề:
+            .col-sm-9 #{contact.subject}
+
+        if contact.createdAt
+          .row.mb-3
+            .col-sm-3.font-weight-bold Ngày Gửi:
+            .col-sm-9 
+              +formatDateTime(contact.createdAt)
+
+        if contact.question
+          .row.mb-3
+            .col-sm-3.font-weight-bold Câu Hỏi:
+            .col-sm-9 !{contact.question}
+
+    .text-center.mt-4
+      a.btn.btn-secondary(href=`${prefixAdmin}/contacts`) Quay lại danh sách

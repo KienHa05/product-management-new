@@ -16,4 +16,6 @@ router.patch(
 
 router.delete('/delete/:id', requirePermission("contacts_delete"), controller.deleteItem);
 
+router.get("/detail/:id", requirePermission("contacts_view"), controller.detail);
+
 module.exports = router;

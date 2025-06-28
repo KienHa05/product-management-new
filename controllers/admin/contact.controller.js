@@ -63,4 +63,23 @@ module.exports.deleteItem = async (req, res) => {
   }
 };
 
+// [GET] /admin/contacts/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      _id: req.params.id,
+      deleted: false
+    };
+
+    const contact = await Contact.findOne(find);
+
+    res.render("admin/pages/contacts/detail", {
+      pageTitle: "Chi tiết Liên Hệ",
+      contact: contact,
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/contacts`);
+  }
+};
+
 
