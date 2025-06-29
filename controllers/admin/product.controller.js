@@ -8,6 +8,7 @@ const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
 const sortPresetConstant = require('../../constants/sortPreset');
 const searchHelper = require('../../helpers/search');
+const removeDiacriticsHelper = require("../../helpers/normalize");
 const paginationHelper = require('../../helpers/pagination');
 
 const createTreeHelper = require("../../helpers/createTree");
@@ -15,7 +16,8 @@ const createTreeHelper = require("../../helpers/createTree");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
   const filterStatus = filterStatusHelper(req.query, statusPresetConstant.productStatus);
-  let objectSearch = searchHelper(req.query);
+
+  const objectSearch = searchHelper(req.query);
 
   let find = {
     deleted: false
@@ -25,8 +27,8 @@ module.exports.index = async (req, res) => {
     find.status = req.query.status;
   }
 
-  if (req.query.keyword) {
-    find.title = objectSearch.regex;
+  if (objectSearch.regex) {
+    find.slugTitle = objectSearch.regex;
   }
 
   // Pagination
@@ -235,6 +237,10 @@ module.exports.createPost = async (req, res) => {
     req.body.position = parseInt(req.body.position);
   }
 
+  if (req.body.title) {
+    req.body.slugTitle = removeDiacriticsHelper(req.body.title.toLowerCase());
+  }
+
   req.body.createdBy = {
     account_id: res.locals.user.id
   }
@@ -282,6 +288,10 @@ module.exports.editPatch = async (req, res) => {
   req.body.discountPercentage = parseInt(req.body.discountPercentage);
   req.body.stock = parseInt(req.body.stock);
   req.body.position = parseInt(req.body.position);
+
+  if (req.body.title) {
+    req.body.slugTitle = removeDiacriticsHelper(req.body.title.toLowerCase());
+  }
 
   try {
     const updatedBy = {
