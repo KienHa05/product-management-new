@@ -6,6 +6,7 @@ const systemConfig = require('../../config/system');
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
 const searchHelper = require('../../helpers/search');
+const removeDiacriticsHelper = require("../../helpers/normalize");
 const createTreeHelper = require("../../helpers/createTree");
 
 // [GET] /admin/products-category
@@ -24,7 +25,7 @@ module.exports.index = async (req, res) => {
   const objectSearch = searchHelper(req.query);
 
   if (objectSearch.regex) {
-    find.title = objectSearch.regex;
+    find.slugTitle = objectSearch.regex;
   }
 
   const records = await ProductCategory.find(find);
@@ -96,12 +97,16 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/products-category/create
 module.exports.createPost = async (req, res) => {
- 
+
   if (req.body.position == "") {
     const count = await ProductCategory.count();
     req.body.position = count + 1;
   } else {
     req.body.position = parseInt(req.body.position);
+  }
+
+  if (req.body.title) {
+    req.body.slugTitle = removeDiacriticsHelper(req.body.title.toLowerCase());
   }
 
   req.body.createdBy = {
@@ -147,6 +152,10 @@ module.exports.editPatch = async (req, res) => {
   const id = req.params.id;
 
   req.body.position = parseInt(req.body.position);
+
+  if (req.body.title) {
+    req.body.slugTitle = removeDiacriticsHelper(req.body.title.toLowerCase());
+  }
 
   try {
     const updatedBy = {
