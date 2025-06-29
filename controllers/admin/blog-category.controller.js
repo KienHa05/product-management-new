@@ -6,6 +6,8 @@ const systemConfig = require('../../config/system');
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
 const searchHelper = require('../../helpers/search');
+const removeDiacriticsHelper = require("../../helpers/normalize");
+
 
 // [GET] /admin/blogs-category
 module.exports.index = async (req, res) => {
@@ -22,7 +24,7 @@ module.exports.index = async (req, res) => {
   const objectSearch = searchHelper(req.query);
 
   if (objectSearch.regex) {
-    find.title = objectSearch.regex;
+    find.slugTitle = objectSearch.regex;
   }
 
   const records = await BlogCategory.find(find);
@@ -89,6 +91,10 @@ module.exports.createPost = async (req, res) => {
     req.body.position = parseInt(req.body.position);
   }
 
+  if (req.body.title) {
+    req.body.slugTitle = removeDiacriticsHelper(req.body.title.toLowerCase());
+  }
+
   req.body.createdBy = {
     account_id: res.locals.user.id
   }
@@ -125,6 +131,10 @@ module.exports.editPatch = async (req, res) => {
   const id = req.params.id;
 
   req.body.position = parseInt(req.body.position);
+
+  if (req.body.title) {
+    req.body.slugTitle = removeDiacriticsHelper(req.body.title.toLowerCase());
+  }
 
   try {
     const updatedBy = {

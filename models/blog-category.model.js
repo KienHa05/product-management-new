@@ -6,6 +6,10 @@ mongoose.plugin(slug);
 const blogCategorySchema = new mongoose.Schema(
   {
     title: String,
+    slugTitle: {
+      type: String,
+      default: ""
+    },
     description: String,
     thumbnail: String,
     status: String,
