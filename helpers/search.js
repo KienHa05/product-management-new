@@ -1,5 +1,7 @@
+const removeDiacritics = require("./normalize");
+
 module.exports = (query) => {
-  let objectSearch = {
+  const objectSearch = {
     keyword: "",
     regex: ""
   };
@@ -7,10 +9,12 @@ module.exports = (query) => {
   if (query.keyword) {
     objectSearch.keyword = query.keyword;
 
-    const regex = new RegExp(objectSearch.keyword, "i");
+    const keywordUnsigned = removeDiacritics(query.keyword.trim().toLowerCase());
+    const words = keywordUnsigned.split(/\s+/).filter(Boolean);
+    const pattern = words.map(w => `(?=.*${w})`).join("") + ".*";
 
-    objectSearch.regex = regex;
+    objectSearch.regex = new RegExp(pattern, "i");
   }
 
   return objectSearch;
-}
+};

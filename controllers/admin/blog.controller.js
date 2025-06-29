@@ -8,6 +8,7 @@ const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
 const sortPresetConstant = require('../../constants/sortPreset');
 const searchHelper = require('../../helpers/search');
+const removeDiacriticsHelper = require("../../helpers/normalize");
 
 
 // [GET] /admin/blogs
@@ -28,7 +29,7 @@ module.exports.index = async (req, res) => {
   const objectSearch = searchHelper(req.query);
 
   if (objectSearch.regex) {
-    find.title = objectSearch.regex;
+    find.slugTitle = objectSearch.regex;
   }
   // End Search
 
@@ -167,6 +168,11 @@ module.exports.createPost = async (req, res) => {
 
   // Xử lí publishedAt
   const { status } = req.body;
+
+  if (req.body.title) {
+    req.body.slugTitle = removeDiacriticsHelper(req.body.title.toLowerCase());
+  }
+
   req.body.publishedAt = (status === "published" ? new Date() : null);
   // End Xử lí publishedAt
 
@@ -207,6 +213,10 @@ module.exports.editPatch = async (req, res) => {
   const id = req.params.id;
 
   req.body.position = parseInt(req.body.position);
+
+  if (req.body.title) {
+    req.body.slugTitle = removeDiacriticsHelper(req.body.title.toLowerCase());
+  }
 
   try {
     const updatedBy = {
