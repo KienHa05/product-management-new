@@ -22,6 +22,11 @@ const contactSchema = new mongoose.Schema(
     subject: {
       type: String,
       trim: true,
+      require: true,
+    },
+    slugSubject: {
+      type: String,
+      default: ""
     },
     question: {
       type: String,

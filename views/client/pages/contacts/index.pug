@@ -28,8 +28,8 @@ block main
             label(for="company") Công ty
             input#company.form-control(type="text", name="company", placeholder="Tên công ty (nếu có)")
           .form-group
-            label(for="subject") Chủ đề
-            input#subject.form-control(type="text", name="subject", placeholder="Nhập chủ đề liên hệ")
+            label(for="subject") Chủ đề *
+            input#subject.form-control(type="text", name="subject", required, placeholder="Nhập chủ đề liên hệ")
           .form-group
             label(for="question") Câu hỏi / Nội dung *
             textarea#question.form-control(name="question", rows="5", required, placeholder="Nhập nội dung câu hỏi...")

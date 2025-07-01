@@ -12,6 +12,12 @@ module.exports.contact = (req, res, next) => {
     return;
   }
 
+  if (!req.body.subject) {
+    req.flash("error", "Vui Lòng Nhập Chủ đề");
+    res.redirect("back");
+    return;
+  }
+
   if (!req.body.question) {
     req.flash("error", "Vui Lòng Nhập Nội Dung Câu Hỏi!");
     res.redirect("back");

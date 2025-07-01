@@ -1,6 +1,8 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 include ../../mixins/moment.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/search.pug
 
 block main
   if role.permissions.includes("contacts_view")
@@ -8,6 +10,15 @@ block main
     +alert-error(5000)
 
     h1 Danh Sách Liên Hệ
+
+    .card.mb-3
+      .card-header Bộ Lọc và Tìm Kiếm
+      .card-body
+        .row
+          .col-6
+            +filter-status(filterStatus)
+          .col-6
+            +search(keyword,"Tìm theo chủ đề...")
 
     .card.mb-3
       .card-header Danh Sách Blog

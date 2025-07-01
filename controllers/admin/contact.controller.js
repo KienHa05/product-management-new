@@ -2,18 +2,36 @@ const Contact = require("../../models/contact.model");
 
 const systemConfig = require("../../config/system");
 
+const filterStatusHelper = require('../../helpers/filterStatus');
+const statusPresetConstant = require('../../constants/statusPreset');
+const searchHelper = require('../../helpers/search');
+
 // [GET] /admin/contacts
 module.exports.index = async (req, res) => {
+  const filterStatus = filterStatusHelper(req.query, statusPresetConstant.contactStatus);
+
+  const objectSearch = searchHelper(req.query);
+
   let find = {
     deleted: false
   };
+
+  if (req.query.status) {
+    find.status = req.query.status;
+  }
+
+  if (objectSearch.regex) {
+    find.slugSubject = objectSearch.regex;
+  }
 
   const contacts = await Contact.find(find)
 
 
   res.render("admin/pages/contacts/index", {
     pageTitle: "Danh Sách Liên Hệ",
-    contacts: contacts
+    contacts: contacts,
+    filterStatus: filterStatus,
+    keyword: objectSearch.keyword,
   });
 };
 
