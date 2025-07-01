@@ -35,7 +35,11 @@ block main
           .row
             .col-8
               if role.permissions.includes("products_edit")
-                +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+                +form-change-multi(
+                  `${prefixAdmin}/products/change-multi?_method=PATCH`,
+                  actionPresetConstant.productAction,
+                  "Bạn Có Chắc Muốn Xóa Các Sản Phẩm Này Không?"
+                )
             .col-4(class=`mb-3`)
               if role.permissions.includes("products_create")
                 a(

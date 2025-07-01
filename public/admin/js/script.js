@@ -105,8 +105,10 @@ if (formChangeMulti) {
 
     const typeChange = e.target.elements.type.value;
 
+    const confirmMessage = formChangeMulti.dataset.confirm || "Bạn Có Chắc Muốn Thực Hiện Hành Động Này?";
+
     if (typeChange == "delete-all") {
-      const isConfirm = confirm("Bạn Có Chắc Muốn Xóa Sản Phẩm Này ??");
+      const isConfirm = confirm(confirmMessage);
 
       if (!isConfirm) {
         return;

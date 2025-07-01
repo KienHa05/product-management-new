@@ -7,6 +7,7 @@ const systemConfig = require("../../config/system");
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
 const sortPresetConstant = require('../../constants/sortPreset');
+const actionPresetConstant = require('../../constants/actionPreset');
 const searchHelper = require('../../helpers/search');
 const removeDiacriticsHelper = require("../../helpers/normalize");
 const paginationHelper = require('../../helpers/pagination');
@@ -96,7 +97,8 @@ module.exports.index = async (req, res) => {
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
     pagination: objectPagination,
-    sortPresetConstant: sortPresetConstant
+    sortPresetConstant: sortPresetConstant,
+    actionPresetConstant: actionPresetConstant
   });
 }
 

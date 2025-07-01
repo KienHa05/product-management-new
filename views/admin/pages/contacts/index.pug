@@ -3,6 +3,7 @@ include ../../mixins/alert.pug
 include ../../mixins/moment.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
+include ../../mixins/form-change-multi.pug
 
 block main
   if role.permissions.includes("contacts_view")
@@ -25,10 +26,15 @@ block main
         .card-body
           .row
             .col-8
-              
+              if role.permissions.includes("contacts_edit")
+                +form-change-multi(
+                  `${prefixAdmin}/contacts/change-multi?_method=PATCH`,
+                  actionPresetConstant.contactAction, 
+                  "Bạn Có Chắc Muốn Xóa Các Liên Hệ Này Không?"
+                )
             .col-4
 
-          table.table.table-hover.table-sm
+          table.table.table-hover.table-sm(checkbox-multi)
             thead
               tr
                 th

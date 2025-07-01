@@ -4,6 +4,7 @@ const systemConfig = require("../../config/system");
 
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
+const actionPresetConstant = require('../../constants/actionPreset');
 const searchHelper = require('../../helpers/search');
 
 // [GET] /admin/contacts
@@ -32,6 +33,7 @@ module.exports.index = async (req, res) => {
     contacts: contacts,
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
+    actionPresetConstant: actionPresetConstant
   });
 };
 
@@ -60,6 +62,47 @@ module.exports.changeStatus = async (req, res) => {
     req.flash("error", "Đã xảy ra lỗi khi cập nhật trạng thái!");
     res.redirect(req.get("Referrer") || "/");
   }
+};
+
+// [PATCH] /admin/contacts/change-multi
+module.exports.changeMulti = async (req, res) => {
+  const type = req.body.type;
+  const ids = req.body.ids.split(", ");
+
+
+  switch (type) {
+    case "resolved":
+      await Contact.updateMany(
+        { _id: { $in: ids } },
+        {
+          status: "resolved"
+        }
+      );
+      req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Liên Hệ!`);
+      break;
+    case "pending":
+      await Contact.updateMany(
+        { _id: { $in: ids } },
+        {
+          status: "pending"
+        }
+      );
+      req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Liên Hệ!`);
+      break;
+    case "delete-all":
+      await Contact.updateMany(
+        { _id: { $in: ids } },
+        {
+          deleted: true
+        }
+      );
+      req.flash("success", `Đã Xóa Thành Công ${ids.length} Liên Hệ!`);
+      break;
+    default:
+      break;
+  }
+
+  res.redirect("back");
 };
 
 // [DELETE] /admin/contacts/delete/:id

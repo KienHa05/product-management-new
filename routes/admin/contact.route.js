@@ -14,6 +14,8 @@ router.patch(
   controller.changeStatus
 );
 
+router.patch("/change-multi", requirePermission("contacts_edit"), controller.changeMulti);
+
 router.delete('/delete/:id', requirePermission("contacts_delete"), controller.deleteItem);
 
 router.get("/detail/:id", requirePermission("contacts_view"), controller.detail);
