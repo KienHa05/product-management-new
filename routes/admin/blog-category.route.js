@@ -44,6 +44,12 @@ router.patch(
   controller.changeStatus
 );
 
+router.patch(
+  "/change-multi",
+  requirePermission("blogs-category_edit"),
+  controller.changeMulti
+);
+
 router.get('/detail/:id', requirePermission("blogs-category_view"), controller.detail);
 
 module.exports = router;

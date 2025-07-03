@@ -5,6 +5,7 @@ const systemConfig = require('../../config/system');
 
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
+const actionPresetConstant = require('../../constants/actionPreset');
 const searchHelper = require('../../helpers/search');
 const removeDiacriticsHelper = require("../../helpers/normalize");
 
@@ -62,7 +63,8 @@ module.exports.index = async (req, res) => {
     pageTitle: "Danh Mục Bài Viết",
     records: records,
     filterStatus: filterStatus,
-    keyword: objectSearch.keyword
+    keyword: objectSearch.keyword,
+    actionPresetConstant: actionPresetConstant
   });
 };
 
