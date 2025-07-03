@@ -6,6 +6,7 @@ const systemConfig = require("../../config/system");
 
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
+const actionPresetConstant = require('../../constants/actionPreset');
 const sortPresetConstant = require('../../constants/sortPreset');
 const searchHelper = require('../../helpers/search');
 const removeDiacriticsHelper = require("../../helpers/normalize");
@@ -80,7 +81,8 @@ module.exports.index = async (req, res) => {
     blogs: blogs,
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
-    sortPresetConstant: sortPresetConstant
+    sortPresetConstant: sortPresetConstant,
+    actionPresetConstant: actionPresetConstant
   });
 };
 
@@ -116,6 +118,66 @@ module.exports.changeStatus = async (req, res) => {
     req.flash("error", "Đã xảy ra lỗi khi cập nhật trạng thái!");
     res.redirect(req.get("Referrer") || "/");
   }
+};
+
+// [PATCH] /admin/blogs/change-multi
+module.exports.changeMulti = async (req, res) => {
+  const type = req.body.type;
+  const ids = req.body.ids.split(", ");
+
+  const updatedBy = {
+    account_id: res.locals.user.id,
+    updatedAt: new Date()
+  };
+
+  switch (type) {
+    case "published":
+      await Blog.updateMany(
+        { _id: { $in: ids } },
+        {
+          status: "published"
+        }
+      );
+      req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Bài Viết!`);
+      break;
+    case "draft":
+      await Blog.updateMany(
+        { _id: { $in: ids } },
+        {
+          status: "draft"
+        }
+      );
+      req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Bài Viết!`);
+      break;
+    case "change-position":
+      for (const item of ids) {
+        let [id, position] = item.split("-");
+        position = parseInt(position);
+
+        await Blog.updateOne(
+          { _id: id },
+          {
+            position: position,
+            $push: { updatedBy: updatedBy }
+          }
+        );
+      }
+      req.flash("success", `Cập Nhật Vị Trí Thành Công ${ids.length} Bài Viết!`);
+      break;
+    case "delete-all":
+      await Blog.updateMany(
+        { _id: { $in: ids } },
+        {
+          deleted: true
+        }
+      );
+      req.flash("success", `Đã Xóa Thành Công ${ids.length} Liên Hệ!`);
+      break;
+    default:
+      break;
+  }
+
+  res.redirect("back");
 };
 
 // [DELETE] /admin/blogs/delete/:id

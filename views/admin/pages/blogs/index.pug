@@ -4,6 +4,7 @@ include ../../mixins/search.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
 include ../../mixins/moment.pug
+include ../../mixins/form-change-multi.pug
 
 
 block main
@@ -33,7 +34,12 @@ block main
         .card-body
           .row
             .col-8
-              
+              if role.permissions.includes("blogs_edit")
+                +form-change-multi(
+                  `${prefixAdmin}/blogs/change-multi?_method=PATCH`,
+                  actionPresetConstant.blogAction, 
+                  "Bạn Có Chắc Muốn Xóa Các Bài Viết Này Không?"
+                )
             .col-4
               if role.permissions.includes("blogs_create")
                 a(
@@ -41,7 +47,7 @@ block main
                   class="btn btn-outline-primary mb-3"
                 ) + Thêm Mới
 
-          table.table.table-hover.table-sm
+          table.table.table-hover.table-sm(checkbox-multi)
             thead
               tr
                 th

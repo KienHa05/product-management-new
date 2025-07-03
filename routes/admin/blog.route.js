@@ -19,6 +19,8 @@ router.patch(
   controller.changeStatus
 );
 
+router.patch("/change-multi", requirePermission("blogs_edit"), controller.changeMulti);
+
 router.delete('/delete/:id', requirePermission("blogs_delete"), controller.deleteItem);
 
 router.get('/create', requirePermission("blogs_create"), controller.create);
