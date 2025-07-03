@@ -171,7 +171,7 @@ module.exports.changeMulti = async (req, res) => {
           deleted: true
         }
       );
-      req.flash("success", `Đã Xóa Thành Công ${ids.length} Liên Hệ!`);
+      req.flash("success", `Đã Xóa Thành Công ${ids.length} Bài Viết!`);
       break;
     default:
       break;

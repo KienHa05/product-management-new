@@ -181,7 +181,7 @@ module.exports.deleteItem = async (req, res) => {
   res.redirect("back");
 };
 
-// [PATCH] /admin/blogs/change-status/:status/:id
+// [PATCH] /admin/blogs-category/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
@@ -206,6 +206,66 @@ module.exports.changeStatus = async (req, res) => {
     req.flash("error", "Cập Nhật Trạng Thái Thất Bại !");
   }
   res.redirect(req.get("Referrer") || "/");
+};
+
+// [PATCH] /admin/blogs-category/change-multi
+module.exports.changeMulti = async (req, res) => {
+  const type = req.body.type;
+  const ids = req.body.ids.split(", ");
+
+  const updatedBy = {
+    account_id: res.locals.user.id,
+    updatedAt: new Date()
+  };
+
+  switch (type) {
+    case "active":
+      await BlogCategory.updateMany(
+        { _id: { $in: ids } },
+        {
+          status: "active"
+        }
+      );
+      req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Danh Mục Bài Viết!`);
+      break;
+    case "inactive":
+      await BlogCategory.updateMany(
+        { _id: { $in: ids } },
+        {
+          status: "inactive"
+        }
+      );
+      req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Danh Mục Bài Viết!`);
+      break;
+    case "change-position":
+      for (const item of ids) {
+        let [id, position] = item.split("-");
+        position = parseInt(position);
+
+        await BlogCategory.updateOne(
+          { _id: id },
+          {
+            position: position,
+            $push: { updatedBy: updatedBy }
+          }
+        );
+      }
+      req.flash("success", `Cập Nhật Vị Trí Thành Công ${ids.length} Danh Mục Bài Viết!`);
+      break;
+    case "delete-all":
+      await BlogCategory.updateMany(
+        { _id: { $in: ids } },
+        {
+          deleted: true
+        }
+      );
+      req.flash("success", `Đã Xóa Thành Công ${ids.length} Danh Mục Bài Viết!`);
+      break;
+    default:
+      break;
+  }
+
+  res.redirect("back");
 };
 
 // [GET] /admin/blogs-category/detail/:id
