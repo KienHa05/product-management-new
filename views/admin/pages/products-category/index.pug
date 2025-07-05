@@ -4,6 +4,8 @@ include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/alert.pug
 include ../../mixins/moment.pug
+include ../../mixins/form-change-multi.pug
+
 
 block main
   if role.permissions.includes("products-category_view")
@@ -27,6 +29,13 @@ block main
         .card-body
           .row
             .col-8
+              if role.permissions.includes("products-category_edit")
+                - const productCategoryAction = actionPresetConstant.productAction 
+                +form-change-multi(
+                  `${prefixAdmin}/products-category/change-multi?_method=PATCH`,
+                  productCategoryAction,
+                  "Bạn Có Chắc Muốn Xóa Các Danh Mục Sản Phẩm Này Không?"
+                ) 
             .col-4
               if role.permissions.includes("products-category_create")
                 a(

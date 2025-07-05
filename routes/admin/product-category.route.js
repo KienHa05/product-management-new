@@ -50,4 +50,10 @@ router.patch(
   controller.changeStatus
 );
 
+router.patch(
+  "/change-multi",
+  requirePermission("products-category_edit"),
+  controller.changeMulti
+);
+
 module.exports = router;

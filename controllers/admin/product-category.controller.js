@@ -5,6 +5,7 @@ const systemConfig = require('../../config/system');
 
 const filterStatusHelper = require('../../helpers/filterStatus');
 const statusPresetConstant = require('../../constants/statusPreset');
+const actionPresetConstant = require('../../constants/actionPreset');
 const searchHelper = require('../../helpers/search');
 const removeDiacriticsHelper = require("../../helpers/normalize");
 const createTreeHelper = require("../../helpers/createTree");
@@ -75,7 +76,8 @@ module.exports.index = async (req, res) => {
     recordsTree: recordsTree,
     flatRecords: flatRecords,
     filterStatus: filterStatus,
-    keyword: objectSearch.keyword
+    keyword: objectSearch.keyword,
+    actionPresetConstant: actionPresetConstant
   });
 };
 
@@ -233,7 +235,7 @@ module.exports.detail = async (req, res) => {
   }
 };
 
-// [PATCH] /admin/products/change-status/:status/:id
+// [PATCH] /admin/products-category/change-status/:status/:id
 module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
@@ -258,4 +260,64 @@ module.exports.changeStatus = async (req, res) => {
     req.flash("error", "Cập Nhật Trạng Thái Thất Bại !");
   }
   res.redirect(req.get("Referrer") || "/");
+};
+
+// [PATCH] /admin/products-category/change-multi
+module.exports.changeMulti = async (req, res) => {
+  const type = req.body.type;
+  const ids = req.body.ids.split(", ");
+
+  const updatedBy = {
+    account_id: res.locals.user.id,
+    updatedAt: new Date()
+  };
+
+  switch (type) {
+    case "active":
+      await ProductCategory.updateMany(
+        { _id: { $in: ids } },
+        {
+          status: "active"
+        }
+      );
+      req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Danh Mục Sản Phẩm!`);
+      break;
+    case "inactive":
+      await ProductCategory.updateMany(
+        { _id: { $in: ids } },
+        {
+          status: "inactive"
+        }
+      );
+      req.flash("success", `Cập Nhật Trạng Thái Thành Công ${ids.length} Danh Mục Sản Phẩm!`);
+      break;
+    case "change-position":
+      for (const item of ids) {
+        let [id, position] = item.split("-");
+        position = parseInt(position);
+
+        await ProductCategory.updateOne(
+          { _id: id },
+          {
+            position: position,
+            $push: { updatedBy: updatedBy }
+          }
+        );
+      }
+      req.flash("success", `Cập Nhật Vị Trí Thành Công ${ids.length} Danh Mục Sản Phẩm!`);
+      break;
+    case "delete-all":
+      await ProductCategory.updateMany(
+        { _id: { $in: ids } },
+        {
+          deleted: true
+        }
+      );
+      req.flash("success", `Đã Xóa Thành Công ${ids.length} Danh Mục Sản Phẩm!`);
+      break;
+    default:
+      break;
+  }
+
+  res.redirect("back");
 };
