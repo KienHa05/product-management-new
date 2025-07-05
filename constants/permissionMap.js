@@ -29,6 +29,12 @@ module.exports = {
   "blogs_delete": "Xoá Bài Viết",
   // End Blog
 
+  // Contact
+  "contacts_view": "Xem Liên Hệ",
+  "contacts_edit": "Sửa Liên Hệ",
+  "contacts_delete": "Xoá Liên Hệ",
+  // End Contact
+
   // Role
   "roles_view": "Xem Vai Trò",
   "roles_create": "Tạo Vai Trò",
