@@ -7,6 +7,23 @@ module.exports = (products, userInfo, order) => {
     return sum + priceNew * item.quantity;
   }, 0);
 
+  const rowsHtml = products.map((item) => {
+    const priceNew = productsHelper.priceNewProduct(item);
+    const total = priceNew * item.quantity;
+
+    return `
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 8px;">${item.productInfo.title}</td>
+        <td style="border: 1px solid #ccc; padding: 8px;">
+          <img src="${item.productInfo.thumbnail}" alt="Ảnh sản phẩm" style="max-width: 100px;" />
+        </td>
+        <td style="border: 1px solid #ccc; padding: 8px;">${item.quantity}</td>
+        <td style="border: 1px solid #ccc; padding: 8px;">${priceNew.toLocaleString()}₫</td>
+        <td style="border: 1px solid #ccc; padding: 8px;">${total.toLocaleString()}₫</td>
+      </tr>
+    `;
+  }).join('');
+
   // Gửi thông tin đơn hàng qua Email
   const subject = `SHOP FPOLY | Thông Báo Xác Nhận Đơn Hàng Thành Công`;
 
@@ -45,24 +62,14 @@ module.exports = (products, userInfo, order) => {
         <thead>
           <tr>
             <th style="border: 1px solid #ccc; padding: 8px;">Tên</th>
+            <th style="border: 1px solid #ccc; padding: 8px;">Hình Ảnh</th>
             <th style="border: 1px solid #ccc; padding: 8px;">Số lượng</th>
             <th style="border: 1px solid #ccc; padding: 8px;">Giá</th>
             <th style="border: 1px solid #ccc; padding: 8px;">Thành tiền</th>
           </tr>
         </thead>
         <tbody>
-          ${products.map(item => {
-    const priceNew = productsHelper.priceNewProduct(item);
-    const total = priceNew * item.quantity;
-    return `
-      <tr>
-        <td style="border: 1px solid #ccc; padding: 8px;">${item.productInfo.title}</td>
-        <td style="border: 1px solid #ccc; padding: 8px;">${item.quantity}</td>
-        <td style="border: 1px solid #ccc; padding: 8px;">${priceNew.toLocaleString()}$</td>
-        <td style="border: 1px solid #ccc; padding: 8px;">${total.toLocaleString()}$</td>
-      </tr>
-    `;
-  }).join('')}
+          ${rowsHtml}
         </tbody>
       </table>
 
@@ -95,6 +102,8 @@ module.exports = (products, userInfo, order) => {
   `;
 
   return {
-    subject, html
+    subject,
+    html,
+    attachments: [] // chỉ còn logo
   }
 };
