@@ -1,0 +1,54 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/moment.pug
+
+block main
+  .container.mt-5
+    +box-head("Lịch Sử Mua Hàng")
+
+    if orders && orders.length
+      table.table.table-bordered.table-hover.text-center.align-middle
+        thead.table-primary
+          tr
+            th(style="vertical-align: middle") STT
+            th(style="vertical-align: middle") Mã đơn hàng
+            th(style="vertical-align: middle") Ngày Đặt Hàng
+            th(style="vertical-align: middle") Số lượng
+            th(style="vertical-align: middle") Thông tin người nhận
+            th(style="vertical-align: middle") Hình thức thanh toán
+            th(style="vertical-align: middle") Trạng Thái
+            th(style="vertical-align: middle") Tổng tiền
+            th(style="vertical-align: middle") Thao tác
+        tbody
+          each order, index in orders
+            tr
+              td #{index + 1}
+              td.text-monospace.font-weight-bold(style="color:rgb(164, 32, 131)") ##{order._id.toString().toUpperCase()}
+              td
+                +formatDateTime(order.createdAt)
+              td #{order.totalQuantity} sản phẩm
+              td.text-left
+                div.mb-1
+                  b Họ tên:
+                  |  #{order.userInfo.fullName}
+                div.mb-1
+                  b Email:
+                  |  #{order.userInfo.email}
+                div.mb-1
+                  b Địa chỉ:
+                  |  #{order.userInfo.address}
+                div
+                  b SĐT:
+                  |  #{order.userInfo.phone}
+              td
+                span.badge.badge-dark.p-2 COD
+              td
+                span.px-2.py-1(class=order.statusData.className) #{order.statusData.label}
+              td.text-danger.font-weight-bold #{order.totalPriceFormatted}$
+              td
+                .d-flex.flex-column.align-items-center.gap-2
+                  a.btn.btn-sm.btn-outline-primary.mb-2(href=`/my-orders/${order._id}`) Chi Tiết
+                  button.btn.btn-sm.btn-outline-danger Hủy Đơn
+    else
+      .alert.alert-info.text-center.mt-4
+        | Bạn chưa có đơn hàng nào!

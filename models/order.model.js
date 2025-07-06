@@ -18,6 +18,18 @@ const orderSchema = new mongoose.Schema(
         quantity: Number,
       }
     ],
+    status: {
+      type: String,
+      enum: [
+        'pending',
+        'confirmed',
+        'packing',
+        'shipping',
+        'delivered',
+        'cancelled'
+      ],
+      default: 'pending',
+    },
     deleted: {
       type: Boolean,
       default: false,

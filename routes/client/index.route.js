@@ -15,6 +15,7 @@ const usersRoutes = require("./users.route");
 const roomsChatRoutes = require("./rooms-chat.route");
 const blogsRoutes = require("./blog.route");
 const contactRoutes = require("./contact.route");
+const ordersRoutes = require("./order.route");
 
 
 module.exports = (app) => {
@@ -44,4 +45,6 @@ module.exports = (app) => {
   app.use("/blogs", blogsRoutes);
 
   app.use("/contact", contactRoutes);
+
+  app.use("/my-orders", ordersRoutes);
 }
