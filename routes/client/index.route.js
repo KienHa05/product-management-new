@@ -46,5 +46,5 @@ module.exports = (app) => {
 
   app.use("/contact", contactRoutes);
 
-  app.use("/my-orders", ordersRoutes);
+  app.use("/my-orders", authMiddleware.requireAuth, ordersRoutes);
 }

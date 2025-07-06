@@ -73,6 +73,7 @@ module.exports.order = async (req, res) => {
 
     const orderInfo = {
       cart_id: cartId,
+      user_id: res.locals.user ? res.locals.user.id : null, // null biểu thị là "guest" mua hàng
       userInfo: userInfo,
       products: products
     };

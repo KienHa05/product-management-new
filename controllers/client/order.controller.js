@@ -1,4 +1,6 @@
 const Order = require("../../models/order.model");
+const Cart = require("../../models/cart.model");
+
 const productsHelper = require("../../helpers/products");
 
 const orderStatusMapConstants = require("../../constants/orderStatusMap");
@@ -6,8 +8,16 @@ const orderStatusMapConstants = require("../../constants/orderStatusMap");
 // [GET] /my-orders
 module.exports.index = async (req, res) => {
   try {
+    // Lấy tất cả cart thuộc về user (đã liên kết sau khi đăng nhập)
+    const cartsOfUser = await Cart.find({ user_id: res.locals.user.id }).select("_id");
+    const cartIds = cartsOfUser.map(c => c._id.toString());
+
     const find = {
       deleted: false,
+      $or: [
+        { user_id: res.locals.user.id },
+        { cart_id: { $in: cartIds } }
+      ]
     };
 
     const ordersDocs = await Order.find(find);
