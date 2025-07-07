@@ -7,7 +7,7 @@ block main
     +box-head("Lịch Sử Mua Hàng")
 
     if orders && orders.length
-      table.table.table-bordered.table-hover.text-center.align-middle
+      table#table-cancel-order.table.table-bordered.table-hover.text-center.align-middle
         thead.table-primary
           tr
             th(style="vertical-align: middle") STT
@@ -47,8 +47,16 @@ block main
               td.text-danger.font-weight-bold #{order.totalPriceFormatted}$
               td
                 .d-flex.flex-column.align-items-center.gap-2
-                  a.btn.btn-sm.btn-outline-primary.mb-2(href=`/my-orders/${order._id}`) Chi Tiết
-                  button.btn.btn-sm.btn-outline-danger Hủy Đơn
+                  a(
+                    class="btn btn-sm btn-outline-primary mb-2"
+                    href=`/my-orders/detail/${order._id}`
+                  ) Chi Tiết
+                  if order && order.status === 'pending'
+                    button(
+                      class="btn btn-sm btn-outline-danger"
+                      button-cancel-order
+                      data-id=order.id
+                    ) Hủy Đơn
     else
       .alert.alert-info.text-center.mt-4
         | Bạn chưa có đơn hàng nào!

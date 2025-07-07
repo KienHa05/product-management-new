@@ -1,0 +1,101 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/moment.pug
+
+block main 
+  .container.mt-5
+    +box-head("Chi Tiết Đơn Hàng")
+
+    //- ACTION BUTTONS
+    .d-flex.justify-content-between.align-items-center.mb-3
+      a.btn.btn-sm.btn-secondary(href="/my-orders")
+        | Quay Lại Lịch Sử
+      if order && order.status === 'pending'
+        form(
+          action=""
+          method="POST"
+          id="form-cancel-order"
+          data-path=`/my-orders/cancel`
+        )
+          button(
+            class="btn btn-sm btn-danger"
+            button-cancel-order
+            data-id=order.id
+          )
+            | Hủy Đơn Hàng 
+
+    //- ORDER INFO TABLE
+    if order
+      table.table.table-bordered
+        tbody
+          tr
+            th(style="width: 200px") Mã Đơn Hàng
+            td(
+              class="text-monospace font-weight-bold"
+              style="color:rgb(164, 32, 131)"
+            ) ##{order._id.toString().toUpperCase()}
+          tr
+            th Ngày Đặt
+            td
+              +formatDateTime(order.createdAt)
+          tr
+            th Trạng Thái
+            td
+              span.px-2.py-1(class=order.statusData.className) #{order.statusData.label}
+          tr
+            th Số Lượng Sản Phẩm
+            td #{order.totalQuantity} sản phẩm
+          tr
+            th Tổng Tiền
+            td.text-danger.font-weight-bold #{order.totalPriceFormatted}$
+          tr
+            th Hình Thức Thanh Toán
+            td
+              span.badge.badge-dark.p-2 COD
+          tr
+            th Thông Tin Người Nhận
+            td
+              div.mb-1
+                b Họ tên:
+                |  #{order.userInfo.fullName}
+              div.mb-1
+                b Email:
+                |  #{order.userInfo.email}
+              div.mb-1
+                b Địa chỉ:
+                |  #{order.userInfo.address}
+              div
+                b SĐT:
+                |  #{order.userInfo.phone}
+
+    //- PRODUCTS LIST
+    if order && order.products && order.products.length
+      +box-head("Danh Sách Sản Phẩm")
+      table.table.table-bordered.table-hover.text-center.align-middle
+        thead.table-light
+          tr
+            th(style="vertical-align: middle") STT
+            th(style="vertical-align: middle") Ảnh
+            th(style="vertical-align: middle") Tên Sản Phẩm
+            th(style="vertical-align: middle") Đơn Giá
+            th(style="vertical-align: middle") Số Lượng
+            th(style="vertical-align: middle") Thành Tiền
+        tbody
+          each p, index in order.products
+            - const priceItem = p.priceNew || p.price;
+            tr
+              td #{index + 1}
+              td
+                if p.product && p.product.thumbnail
+                  img(src=p.product.thumbnail, alt=p.product.title, width="60")
+              td.text-left
+                if p.product && p.product.title
+                  a(href=`/products/detail/${p.product.slug || p.product._id}`) #{p.product.title}
+                else
+                  | #{p.title || 'Sản phẩm'}
+              td #{priceItem}$
+              td #{p.quantity}
+              td.text-danger.font-weight-bold #{priceItem * p.quantity}$
+    else
+      .alert.alert-info.text-center.mt-4
+        | Không có sản phẩm trong đơn hàng!
