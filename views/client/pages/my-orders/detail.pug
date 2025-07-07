@@ -3,6 +3,8 @@ include ../../mixins/box-head.pug
 include ../../mixins/moment.pug
 
 block main 
+  +alert-success(5000)
+  
   .container.mt-5
     +box-head("Chi Tiết Đơn Hàng")
 
@@ -99,3 +101,6 @@ block main
     else
       .alert.alert-info.text-center.mt-4
         | Không có sản phẩm trong đơn hàng!
+
+block script
+  script(src="/js/order.js") 

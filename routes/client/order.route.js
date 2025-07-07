@@ -8,4 +8,6 @@ router.get('/', controller.index);
 
 router.get('/detail/:orderId', controller.detail);
 
+router.patch('/cancel/:orderId', controller.cancelOrder);
+
 module.exports = router;

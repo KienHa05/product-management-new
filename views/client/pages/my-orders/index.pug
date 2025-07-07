@@ -1,12 +1,17 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 include ../../mixins/moment.pug
+include ../../mixins/alert.pug
 
 block main
+  +alert-success(5000)
+
   .container.mt-5
     +box-head("Lịch Sử Mua Hàng")
 
     if orders && orders.length
+      //- Tổng số đơn hàng
+      p.mb-3.text-dark.font-weight-bold Tổng đơn hàng: #{orders.length}
       table#table-cancel-order.table.table-bordered.table-hover.text-center.align-middle
         thead.table-primary
           tr
@@ -57,6 +62,16 @@ block main
                       button-cancel-order
                       data-id=order.id
                     ) Hủy Đơn
+      
+      form(
+        action=""
+        method="POST"
+        id="form-cancel-order"
+        data-path=`/my-orders/cancel`
+      )
     else
       .alert.alert-info.text-center.mt-4
         | Bạn chưa có đơn hàng nào!
+
+block script
+  script(src="/js/order.js") 

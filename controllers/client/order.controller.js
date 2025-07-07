@@ -21,7 +21,11 @@ module.exports.index = async (req, res) => {
       ]
     };
 
-    const ordersDocs = await Order.find(find);
+    const sort = {
+      createdAt: "desc"
+    };
+
+    const ordersDocs = await Order.find(find).sort(sort);
 
     // Bổ sung dữ liệu tính sẵn để View chỉ việc hiển thị
     const orders = ordersDocs.map((order) => {
@@ -145,3 +149,45 @@ module.exports.detail = async (req, res) => {
   }
 };
 
+// [PATCH] /my-orders/cancel/:orderId
+module.exports.cancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    // Xác thực đơn hàng thuộc về người dùng hiện tại và đang ở trạng thái "pending"
+
+    // Lấy tất cả cart thuộc về user (đã liên kết sau khi đăng nhập)
+    const cartsOfUser = await Cart.find({ user_id: res.locals.user.id }).select("_id");
+    const cartIds = cartsOfUser.map((c) => c._id.toString());
+
+    const find = {
+      _id: orderId,
+      deleted: false,
+      status: "pending", // Chỉ được phép huỷ đơn ở trạng thái chờ xác nhận
+      $or: [
+        { user_id: res.locals.user.id },
+        { cart_id: { $in: cartIds } },
+      ],
+    };
+
+    const order = await Order.findOne(find);
+
+    if (!order) {
+      req.flash("error", "Không tìm thấy đơn hàng hoặc đơn hàng không thể huỷ!");
+      return res.redirect("back");
+    }
+
+    await Order.updateOne(
+      { _id: orderId },
+      { status: "cancelled" }
+    );
+
+    req.flash("success", "Hủy Đơn Hàng Thành Công!");
+
+    res.redirect("back");
+  } catch (error) {
+    console.error(`Có Lỗi Bên order.controller.js : ${error}`);
+    req.flash("error", "Có lỗi xảy ra khi hủy đơn, vui lòng thử lại sau!");
+    res.redirect("back");
+  }
+};
