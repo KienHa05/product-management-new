@@ -132,6 +132,26 @@ block main
               td(class="text-center")
                 input(type="checkbox")
 
+          //- Liên Hệ
+          tr
+            td(colspan="4")
+              b Liên Hệ
+          tr(data-name=`contacts_view`)
+            td Xem
+            each item in records
+              td(class="text-center")
+                input(type="checkbox") 
+          tr(data-name=`contacts_edit`)
+            td Chỉnh Sửa
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")          
+          tr(data-name=`contacts_delete`)
+            td Xóa
+            each item in records
+              td(class="text-center")
+                input(type="checkbox")
+
           //- Nhóm Quyền      
           tr
             td(colspan="4")
