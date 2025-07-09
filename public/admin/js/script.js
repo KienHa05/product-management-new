@@ -213,3 +213,36 @@ if (sort) {
   }
 }
 // End Sort
+
+// Toggle Sider
+const initToggleSider = () => {
+  const btn = document.querySelector('[data-toggle="sider"]');
+  const icon = document.querySelector('#icon-sider');
+  if (!btn || !icon) return;
+
+  const cookieName = 'admin_sider';
+  const cookieMaxAge = 60 * 60 * 24 * 30; // 30 ngày
+
+  const setCookie = hidden => {
+    const cookieValue = hidden ? 'hide' : 'show';
+    document.cookie = `${cookieName}=${cookieValue};path=/;max-age=${cookieMaxAge}`;
+  };
+
+  const updateIcon = hidden => {
+    icon.className = hidden ? 'fa-solid fa-arrow-right' : 'fa-solid fa-arrow-left';
+  };
+
+  // Icon lúc khởi tạo
+  updateIcon(document.body.classList.contains('hide-sider'));
+
+  btn.addEventListener('click', () => {
+    const hidden = document.body.classList.toggle('hide-sider');
+    
+    updateIcon(hidden);
+    setCookie(hidden);
+  });
+};
+
+// Gọi hàm
+initToggleSider();
+// End Toggle Sider

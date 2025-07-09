@@ -1,6 +1,7 @@
 const systemConfig = require("../../config/system");
 
 const authMiddleware = require("../../middlewares/admin/auth.middleware");
+const sidebarStateMiddleware = require("../../middlewares/admin/sidebar.middleware");
 
 const dashboardRoutes = require("./dashboard.route");
 const productRoutes = require("./product.route");
@@ -16,6 +17,8 @@ const contactsRoutes = require("./contact.route");
 
 module.exports = (app) => {
   const PATH_ADMIN = systemConfig.prefixAdmin;
+
+  app.use(PATH_ADMIN, sidebarStateMiddleware);
 
   app.use(
     PATH_ADMIN + "/dashboard",
