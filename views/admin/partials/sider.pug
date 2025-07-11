@@ -3,6 +3,9 @@
     ul
       li
         a(href=`${prefixAdmin}/dashboard`) Tổng Quan
+      if role.permissions.includes("orders_view") 
+        li
+          a(href=`${prefixAdmin}/orders`) Danh Sách Đơn Hàng
       if role.permissions.includes("products-category_view") 
         li
           a(href=`${prefixAdmin}/products-category`) Danh Mục Sản Phẩm

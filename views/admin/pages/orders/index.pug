@@ -1,0 +1,90 @@
+extends ../../layouts/default.pug
+include ../../mixins/form-change-multi.pug
+include ../../mixins/alert.pug
+
+block main
+  if role.permissions.includes("orders_view")
+    +alert-success(5000)
+
+    h1 Danh Sách Đơn Hàng
+              
+    .card.mb-3
+      .card-header Danh Sách Đơn Hàng
+        .card-body
+          .row
+            .col-8
+              //- if role.permissions.includes("orders_edit")
+              //-   +form-change-multi(
+              //-     `${prefixAdmin}/orders/change-multi?_method=PATCH`,
+              //-     actionPresetConstant.orderAction,
+              //-     "Bạn Có Chắc Muốn Xóa Các Đơn Hàng Này Không?"
+              //-   )
+          
+          table(
+            class="table table-hover table-sm"
+            checkbox-multi
+          )
+            thead
+              tr
+                th
+                  input(type="checkbox" name="checkall")
+                th STT
+                th Mã Đơn Hàng
+                th Thông Tin Khách Hàng
+                th Tổng Tiền
+                th Hình Thức Thanh Toán
+                th Đơn Vị Vận Chuyển
+                th Trạng Thái Đơn Hàng
+                th Thao Tác
+
+            tbody
+              each order, index in orders
+                tr
+                  td
+                    input(
+                      type="checkbox"
+                      name="id"
+                      value=order.id
+                    )
+                  td #{index + 1}
+                  td.text-monospace.font-weight-bold(style="color:rgb(164, 32, 131)") ##{order._id.toString().toUpperCase()}
+                  td.text-left
+                    div.mb-1
+                      b Họ tên:
+                      |  #{order.userInfo.fullName}
+                    div.mb-1
+                      b Email:
+                      |  #{order.userInfo.email}
+                    div.mb-1
+                      b Địa chỉ:
+                      |  #{order.userInfo.address}
+                    div
+                      b SĐT:
+                      |  #{order.userInfo.phone}
+                  td.text-center.text-danger.font-weight-bold #{order.totalPriceFormatted}$
+                  td.text-center
+                    span.badge.badge-dark.p-2 #{order.paymentMethod}
+                  td.text-center #{order.shippingProvider.code}
+                  td.text-center
+                    span.px-2.py-1(class=order.statusData.className) #{order.statusData.label}
+                  td 
+                    a(
+                      href=`${prefixAdmin}/orders/detail/${order.id}`
+                      class="btn btn-info btn-sm m-1"
+                    ) Chi Tiết 
+                    if role.permissions.includes("orders_delete")  
+                      button(
+                        class="btn btn-danger btn-sm m-1"
+                        button-delete
+                        data-id=order.id
+                      ) Xóa
+
+    form(
+      action=""
+      method="POST"
+      id="form-delete-item"
+      data-path=`${prefixAdmin}/orders/delete`
+    )                      
+
+    script(src="/admin/js/order.js") 
+        

@@ -18,6 +18,19 @@ const orderSchema = new mongoose.Schema(
         quantity: Number,
       }
     ],
+    paymentMethod: {
+      type: String,
+      enum: ['COD', 'Momo', 'VNPay', 'ZaloPay', 'BankTransfer'],
+      default: 'COD'
+    },
+    shippingProvider: {
+      code: {
+        type: String,
+        enum: ['GHN', 'VTP', 'GHTK', 'JNT', 'NJV', 'SPX'],
+        default: "GHN"
+      },
+    },
+    note: String,
     status: {
       type: String,
       enum: [
