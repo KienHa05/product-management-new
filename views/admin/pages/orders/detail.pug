@@ -1,0 +1,103 @@
+extends ../../layouts/default.pug
+include ../../mixins/moment.pug
+
+block main
+  .container
+    //- Action Buttons
+    .d-flex.justify-content-between.align-items-center.mb-4
+      h3.mb-0.text-primary Chi Tiết Đơn Hàng
+      a.btn.btn-outline-secondary(href=`${prefixAdmin}/orders`)
+        i.fas.fa-arrow-left.mr-1
+        | Danh Sách Đơn Hàng
+
+    //- Order Info Card
+    if order
+      .card.mb-4.shadow-sm
+        .card-header.bg-info.text-white.font-weight-bold
+          | Thông Tin Đơn Hàng
+        .card-body
+          .row.mb-2
+            .col-md-4.font-weight-bold Mã Đơn Hàng:
+            .col-md-8.text-monospace(style="color:rgb(164, 32, 131)") ##{order._id.toString().toUpperCase()}
+          .row.mb-2
+            .col-md-4.font-weight-bold Ngày Đặt:
+            .col-md-8
+              +formatDateTime(order.createdAt)
+          .row.mb-2
+            .col-md-4.font-weight-bold Trạng Thái:
+            .col-md-8
+              span.px-2.py-1.badge(class=order.statusData.className)= order.statusData.label
+          .row.mb-2
+            .col-md-4.font-weight-bold Số Lượng Sản Phẩm:
+            .col-md-8= order.totalQuantity + ' sản phẩm'
+          .row.mb-2
+            .col-md-4.font-weight-bold Tổng Tiền:
+            .col-md-8.text-danger.font-weight-bold #{order.totalPriceFormatted}$
+          if order.paymentMethod
+            .row.mb-2
+              .col-md-4.font-weight-bold Hình Thức Thanh Toán:
+              .col-md-8
+                span.badge.badge-dark.p-2= order.paymentMethod
+          if order.shippingProvider && order.shippingProvider.code
+            .row.mb-2
+              .col-md-4.font-weight-bold Đơn Vị Vận Chuyển:
+              .col-md-8= order.shippingProvider.code
+          if order.note
+            .row.mb-2
+              .col-md-4.font-weight-bold Ghi Chú:
+              .col-md-8 #{order.note}
+
+    //- Customer Info Card
+    if order && order.userInfo
+      .card.mb-4.shadow-sm
+        .card-header.bg-secondary.text-white.font-weight-bold
+          | Thông Tin Khách Hàng
+        .card-body
+          if order.userInfo.fullName
+            .row.mb-2
+              .col-md-4.font-weight-bold Họ tên:
+              .col-md-8= order.userInfo.fullName
+          if order.userInfo.email
+            .row.mb-2
+              .col-md-4.font-weight-bold Email:
+              .col-md-8= order.userInfo.email
+          if order.userInfo.address
+            .row.mb-2
+              .col-md-4.font-weight-bold Địa chỉ:
+              .col-md-8= order.userInfo.address
+          if order.userInfo.phone
+            .row.mb-2
+              .col-md-4.font-weight-bold SĐT:
+              .col-md-8= order.userInfo.phone
+
+    //- Product List Card
+    if order && order.products && order.products.length
+      .card.shadow-sm
+        .card-header.bg-success.text-white.font-weight-bold
+          | Danh Sách Sản Phẩm
+        .card-body.p-0
+          table.table.table-hover.table-bordered.mb-0.text-center
+            thead.thead-light
+              tr
+                th(style="vertical-align: middle") STT
+                th Ảnh
+                th Tên Sản Phẩm
+                th Đơn Giá
+                th Số Lượng
+                th Thành Tiền
+            tbody
+              each p, index in order.products
+                - const priceItem = p.priceNew || p.price;
+                tr
+                  td.align-middle= index + 1
+                  td
+                    if p.product && p.product.thumbnail
+                      img(src=p.product.thumbnail, alt=p.product.title, width="60")
+                  td.text-left.align-middle
+                    if p.product && p.product.title
+                      | #{p.product.title}
+                    else
+                      | #{p.title || 'Sản phẩm'}
+                  td.align-middle= priceItem + '$'
+                  td.align-middle= p.quantity
+                  td.text-danger.font-weight-bold.align-middle= (priceItem * p.quantity) + '$'

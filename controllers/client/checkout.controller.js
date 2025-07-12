@@ -46,7 +46,15 @@ module.exports.index = async (req, res) => {
 module.exports.order = async (req, res) => {
   try {
     const cartId = req.cookies.cartId;
-    const userInfo = req.body;
+
+    const { fullName, phone, address, email, note } = req.body;
+
+    const userInfo = {
+      fullName: fullName,
+      phone: phone,
+      address: address,
+      email: email
+    };
 
     const cart = await Cart.findOne({ _id: cartId });
 
@@ -75,7 +83,8 @@ module.exports.order = async (req, res) => {
       cart_id: cartId,
       user_id: res.locals.user ? res.locals.user.id : null, // null biểu thị là "guest" mua hàng
       userInfo: userInfo,
-      products: products
+      products: products,
+      note: note
     };
 
     const order = new Order(orderInfo);
@@ -115,27 +124,35 @@ module.exports.order = async (req, res) => {
 
 // [GET] /checkout/success/:orderId
 module.exports.success = async (req, res) => {
+  try {
+    const order = await Order.findOne({
+      _id: req.params.orderId,
+    });
 
-  const order = await Order.findOne({
-    _id: req.params.orderId,
-  });
+    if (!order) {
+      return res.redirect("/");
+    }
 
-  for (const product of order.products) {
-    const productInfo = await Product.findOne({
-      _id: product.product_id,
-    }).select("title thumbnail");
+    for (const product of order.products) {
+      const productInfo = await Product.findOne({
+        _id: product.product_id,
+      }).select("title thumbnail");
 
-    product.productInfo = productInfo;
+      product.productInfo = productInfo;
 
-    product.priceNew = productsHelper.priceNewProduct(product);
+      product.priceNew = productsHelper.priceNewProduct(product);
 
-    product.totalPrice = product.priceNew * product.quantity;
+      product.totalPrice = product.priceNew * product.quantity;
+    }
+
+    order.totalPrice = order.products.reduce((sum, item) => sum + item.totalPrice, 0);
+
+    res.render("client/pages/checkout/success", {
+      pageTitle: "Đặt Hàng Thành Công",
+      order: order,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.redirect("/");
   }
-
-  order.totalPrice = order.products.reduce((sum, item) => sum + item.totalPrice, 0);
-
-  res.render("client/pages/checkout/success", {
-    pageTitle: "Đặt Hàng Thành Công",
-    order: order,
-  });
 }

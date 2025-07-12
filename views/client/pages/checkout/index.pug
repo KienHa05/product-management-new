@@ -56,7 +56,7 @@ block main
               method="POST"
             )
               div(class="form-group")
-                label(for="fullName") Họ Tên
+                label(for="fullName") Họ Tên *
                 input(
                     type="text"
                     class="form-control"
@@ -65,7 +65,7 @@ block main
                     required
                 )
               div(class="form-group")
-                label(for="phone") Số điện thoại
+                label(for="phone") Số điện thoại *
                 input(
                     type="text"
                     class="form-control"
@@ -74,7 +74,7 @@ block main
                     required
                 )
               div(class="form-group")
-                label(for="address") Địa Chỉ
+                label(for="address") Địa Chỉ *
                 input(
                     type="text"
                     class="form-control"
@@ -83,13 +83,21 @@ block main
                     required
                 )
               div(class="form-group")
-                label(for="email") Email
+                label(for="email") Email *
                 input(
                     type="email"
                     class="form-control"
                     id="email"
                     name="email"
                     required
+                )
+              div(class="form-group")
+                label(for="textarea-note") Ghi Chú
+                textarea#textarea-note(
+                  class="form-control"
+                  name="note"
+                  rows="5"
+                  placeholder="Nhập Ghi Chú Cho Người Bán ( Không Bắt Buộc )"
                 )
               div(class="form-group")
                 button(

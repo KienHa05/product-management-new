@@ -8,4 +8,6 @@ const { requirePermission } = require('../../middlewares/admin/permission.middle
 
 router.get('/', requirePermission("orders_view"), controller.index);
 
+router.get('/detail/:orderId', requirePermission("orders_view"), controller.detail);
+
 module.exports = router;
