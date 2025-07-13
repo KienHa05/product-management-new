@@ -10,4 +10,6 @@ router.get('/', requirePermission("orders_view"), controller.index);
 
 router.get('/detail/:orderId', requirePermission("orders_view"), controller.detail);
 
+router.delete('/delete/:orderId', requirePermission("orders_delete"), controller.deleteItem);
+
 module.exports = router;

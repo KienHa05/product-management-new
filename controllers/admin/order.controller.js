@@ -128,5 +128,18 @@ module.exports.detail = async (req, res) => {
   }
 };
 
+// [DELETE] /admin/orders/delete/:orderId
+module.exports.deleteItem = async (req, res) => {
+  const orderId = req.params.orderId;
+
+  await Order.updateOne({ _id: orderId }, {
+    deleted: true,
+  });
+
+  req.flash("success", `Đã Xóa Thành Công Bài Viết Này!`);
+
+  res.redirect(req.get("Referrer") || "/");
+};
+
 
 
