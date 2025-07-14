@@ -4,21 +4,47 @@ const Product = require("../../models/product.model");
 const systemConfig = require("../../config/system");
 
 const productsHelper = require("../../helpers/products");
-
+const filterStatusHelper = require('../../helpers/filterStatus');
+const statusPresetConstant = require('../../constants/statusPreset');
 const orderStatusMapConstants = require("../../constants/orderStatusMap");
+const searchOrdersHelper = require('../../helpers/searchOrders');
 
 
 // [GET] /admin/orders
 module.exports.index = async (req, res) => {
-  const find = {
+  const filterStatus = filterStatusHelper(req.query, statusPresetConstant.orderStatus);
+
+  // Smart search
+  const searchObj = searchOrdersHelper(req.query);
+
+  let find = {
     deleted: false
   };
+
+  if (req.query.status) {
+    find.status = req.query.status;
+  }
+
+  // Merge search conditions (if any)
+  if (searchObj.find && Object.keys(searchObj.find).length) {
+    find = { ...find, ...searchObj.find };
+  }
+
+  // Kiểm tra có nhập keyword hay không
+  const hasKeyword = searchObj.keyword !== "";
+
+  // Nếu người dùng có nhập keyword nhưng nó không phải ObjectId hợp lệ → set điều kiện _id:null để không trả về gì
+  if (hasKeyword && (!searchObj.find || Object.keys(searchObj.find).length === 0)) {
+    find = { ...find, _id: null }; // luôn không khớp
+  }
 
   const sort = {
     createdAt: "desc"
   };
 
   const ordersDocs = await Order.find(find).sort(sort);
+
+  const notFound = hasKeyword && ordersDocs.length === 0;
 
   const orders = ordersDocs.map((order) => {
     // Tổng số lượng sản phẩm
@@ -50,7 +76,10 @@ module.exports.index = async (req, res) => {
 
   res.render("admin/pages/orders/index", {
     pageTitle: "Quản Lí Đơn Hàng",
-    orders: orders
+    orders: orders,
+    filterStatus: filterStatus,
+    keyword: searchObj.keyword,
+    notFound: notFound
   });
 };
 

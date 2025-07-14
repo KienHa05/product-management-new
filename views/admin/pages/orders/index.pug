@@ -1,12 +1,24 @@
 extends ../../layouts/default.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/search.pug
+include ../../mixins/alert.pug
 
 block main
   if role.permissions.includes("orders_view")
     +alert-success(5000)
 
     h1 Danh Sách Đơn Hàng
+
+    .card.mb-3
+      .card-header Bộ Lọc và Tìm Kiếm
+      .card-body
+        .row
+          .col-7
+            +filter-status(filterStatus)
+          .col-5
+            +search(keyword, "Nhập mã đơn...")
               
     .card.mb-3
       .card-header Danh Sách Đơn Hàng
@@ -38,46 +50,50 @@ block main
                 th Thao Tác
 
             tbody
-              each order, index in orders
+              if notFound || orders.length === 0
                 tr
-                  td
-                    input(
-                      type="checkbox"
-                      name="id"
-                      value=order.id
-                    )
-                  td #{index + 1}
-                  td.text-monospace.font-weight-bold(style="color:rgb(164, 32, 131)") ##{order._id.toString().toUpperCase()}
-                  td.text-left
-                    div.mb-1
-                      b Họ tên:
-                      |  #{order.userInfo.fullName}
-                    div.mb-1
-                      b Email:
-                      |  #{order.userInfo.email}
-                    div.mb-1
-                      b Địa chỉ:
-                      |  #{order.userInfo.address}
-                    div
-                      b SĐT:
-                      |  #{order.userInfo.phone}
-                  td.text-center.text-danger.font-weight-bold #{order.totalPriceFormatted}$
-                  td.text-center
-                    span.badge.badge-dark.p-2 #{order.paymentMethod}
-                  td.text-center #{order.shippingProvider.code}
-                  td.text-center
-                    span.px-2.py-1(class=order.statusData.className) #{order.statusData.label}
-                  td 
-                    a(
-                      href=`${prefixAdmin}/orders/detail/${order.id}`
-                      class="btn btn-info btn-sm m-1"
-                    ) Chi Tiết 
-                    if role.permissions.includes("orders_delete")  
-                      button(
-                        class="btn btn-danger btn-sm m-1"
-                        button-delete
-                        data-id=order.id
-                      ) Xóa
+                  td(colspan="9" class="text-center text-danger font-weight-bold") Không tìm thấy đơn hàng phù hợp !
+              else
+                each order, index in orders
+                  tr
+                    td
+                      input(
+                        type="checkbox"
+                        name="id"
+                        value=order.id
+                      )
+                    td #{index + 1}
+                    td.text-monospace.font-weight-bold(style="color:rgb(164, 32, 131)") ##{order._id.toString().toUpperCase()}
+                    td.text-left
+                      div.mb-1
+                        b Họ tên:
+                        |  #{order.userInfo.fullName}
+                      div.mb-1
+                        b Email:
+                        |  #{order.userInfo.email}
+                      div.mb-1
+                        b Địa chỉ:
+                        |  #{order.userInfo.address}
+                      div
+                        b SĐT:
+                        |  #{order.userInfo.phone}
+                    td.text-center.text-danger.font-weight-bold #{order.totalPriceFormatted}$
+                    td.text-center
+                      span.badge.badge-dark.p-2 #{order.paymentMethod}
+                    td.text-center #{order.shippingProvider.code}
+                    td.text-center
+                      span.px-2.py-1(class=order.statusData.className) #{order.statusData.label}
+                    td 
+                      a(
+                        href=`${prefixAdmin}/orders/detail/${order.id}`
+                        class="btn btn-info btn-sm m-1"
+                      ) Chi Tiết 
+                      if role.permissions.includes("orders_delete")  
+                        button(
+                          class="btn btn-danger btn-sm m-1"
+                          button-delete
+                          data-id=order.id
+                        ) Xóa
 
     form(
       action=""
